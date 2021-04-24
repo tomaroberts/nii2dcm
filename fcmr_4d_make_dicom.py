@@ -116,7 +116,7 @@ new_dict_items = {
     0x20011016: ('SS', '1', "Number Of PC Directions", '', 'NumberOfPCDirections'),
     0x20011017: ('SL', '1', "Number Of Phases MR", '', 'NumberOfPhasesMR'),
     0x20011018: ('SL', '1', "Number Of Slices MR", '', 'NumberOfSlicesMR'),
-    0x2001101a: ('FL', '3', "PC Velocity", '', 'PCVelocity'),
+    0x2001101a: ('FL', '3', "PC Velocity", '', 'PCVelocity'), # [LR, AP, FH]
     0x2001101d: ('IS', '1', "Reconstruction Number MR", '', 'ReconstructionNumberMR'),
     0x00089209: ('CS', '1', "Acquisition Contrast", '', 'AcquisitionContrast'),
     0x00189014: ('CS', '1', "Phase Contrast", '', 'PhaseContrast'),
@@ -745,7 +745,7 @@ ds.PCVelocity = [0, 0, venc] # M has venc as 3rd arg
 # ds.ReconstructionNumberMR = 1 # TODO: Not sure if required.
 ds.AcquisitionContrast = 'FLOW_ENCODED'
 ds.PhaseContrast = 'YES'
-# ds.VelocityEncodingDirection = [0.0, 0.0, 0.0] # TODO: Not sure if required.
+ds.VelocityEncodingDirection = [0.0, 0.0, 0.0] # TODO: Not sure if required.
 ds.VelocityEncodingMinimumValue = 0.0 # TODO: Not sure if required.
 
 # Update Instance-wise Attributes
@@ -830,13 +830,13 @@ if recon_vel == 1:
         ds.NumberOfPhasesMR = nF
         ds.AcquisitionContrast = 'FLOW_ENCODED'
         ds.PhaseContrast = 'YES'
-        # ds.VelocityEncodingDirection = [0.0, 0.0, 0.0] # TODO: Not sure if required.
+        ds.VelocityEncodingDirection = [0.0, 0.0, 0.0] # TODO: Not sure if required.
         ds.VelocityEncodingMinimumValue = 0.0 # TODO: Not sure if required.
 
         # Update Direction Dependent Fixed Attributes
         if iVelVol==0:
-            ds.ProtocolName = 'FCMR 4D FLOW V0'
-            ds.SeriesDescription = 'kt B-FFE V0'
+            ds.ProtocolName = 'FCMR 4D FLOW V0 RL'
+            ds.SeriesDescription = 'kt B-FFE V0 RL'
             ds.InstanceCreationTime = str(seriesTime + 200)
             ds.AcquistionNumber = 3
             ds.SeriesNumber = "2003"
@@ -845,8 +845,8 @@ if recon_vel == 1:
             ds.PCVelocity = [venc, 0, 0]
             # ds.ReconstructionNumberMR = 3 # TODO: Not sure if required.
         elif iVelVol==1:
-            ds.ProtocolName = 'FCMR 4D FLOW V1'
-            ds.SeriesDescription = 'kt B-FFE V1'
+            ds.ProtocolName = 'FCMR 4D FLOW V1 AP'
+            ds.SeriesDescription = 'kt B-FFE V1 AP'
             ds.InstanceCreationTime = str(seriesTime + 300)
             ds.AcquistionNumber = 4
             ds.SeriesNumber = "2004"
@@ -855,8 +855,8 @@ if recon_vel == 1:
             ds.PCVelocity = [0, venc, 0]
             # ds.ReconstructionNumberMR = 4 # TODO: Not sure if required.
         elif iVelVol==2:
-            ds.ProtocolName = 'FCMR 4D FLOW V2'
-            ds.SeriesDescription = 'kt B-FFE V2'
+            ds.ProtocolName = 'FCMR 4D FLOW V2 FH'
+            ds.SeriesDescription = 'kt B-FFE V2 FH'
             ds.InstanceCreationTime = str(seriesTime + 400)
             ds.AcquistionNumber = 5
             ds.SeriesNumber = "2005"

@@ -4,7 +4,6 @@ classes for creating a dicom from scratch
 Tom Roberts
 """
 
-import tempfile
 import datetime
 import os
 from pydicom.dataset import FileDataset, FileMetaDataset
@@ -13,6 +12,7 @@ from pydicom.datadict import DicomDictionary, keyword_dict
 from pydicom.sequence import Sequence
 import nibabel as nib
 
+nii2dcm_temp_filename = 'nii2dcm_tempfile.dcm'
 
 class Dicom:
     """
@@ -24,7 +24,7 @@ class Dicom:
 
     """
 
-    def __init__(self, filename=tempfile.NamedTemporaryFile(suffix='.dcm').name):
+    def __init__(self, filename=nii2dcm_temp_filename):
 
         self.filename = filename
 
@@ -108,13 +108,6 @@ class Dicom:
         self.ds.SeriesInstanceUID = ""
         self.ds.SeriesNumber = ""
         self.ds.AcquisitionNumber = ""
-
-        # # MRI DICOM tags
-        # # TODO: create MRI DICOM class
-        # self.ds.Modality = 'MR'
-        # self.file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
-        # self.ds.SOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
-        # self.ds.MRAcquisitionType = '' # '3D' for SVR
 
         # # Omitted for now:
         # 'FrameOfReferenceUID': uid_frame_of_reference,  # per SVR – think to do with localizer
@@ -361,3 +354,20 @@ class DicomMRI(Dicom):
     """
     Creates basic MRI DICOM structure
     """
+
+    def __init__(self, filename=nii2dcm_temp_filename):
+        super().__init__(filename)
+        self.ds.Modality = 'MR'
+        self.file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
+        self.ds.SOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
+        self.ds.MRAcquisitionType = ''
+
+
+class DicomMRISVR(DicomMRI):
+    """
+    Creates 3D Slice-to-Volume Registration reconstruction DICOM
+    """
+
+    def __init__(self, filename=nii2dcm_temp_filename):
+        super().__init__(filename)
+        self.ds.MRAcquisitionType = '3D'

@@ -1,3 +1,9 @@
+"""
+classes for creating 3D MRI SVR DICOMs
+
+Tom Roberts
+"""
+
 from nii2dcm.dcm import DicomMRI, nii2dcm_temp_filename
 
 

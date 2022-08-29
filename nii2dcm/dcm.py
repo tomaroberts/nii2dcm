@@ -9,8 +9,6 @@ import os
 from pydicom.dataset import FileDataset, FileMetaDataset
 from pydicom.uid import UID
 from pydicom.datadict import DicomDictionary, keyword_dict
-from pydicom.sequence import Sequence
-import nibabel as nib
 
 nii2dcm_temp_filename = 'nii2dcm_tempfile.dcm'
 

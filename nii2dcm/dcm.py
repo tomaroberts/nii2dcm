@@ -219,7 +219,56 @@ class DicomMRI(Dicom):
 
     def __init__(self, filename=nii2dcm_temp_filename):
         super().__init__(filename)
+
         self.ds.Modality = 'MR'
         self.file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
         self.ds.SOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
         self.ds.MRAcquisitionType = ''
+        self.ds.ScanningSequence = ''
+        self.ds.SequenceVariant = ''
+        self.ds.ScanOptions = ''
+        self.ds.RepetitionTime = ''
+        self.ds.EchoTime = ''
+        self.ds.EchoNumbers = ''
+        self.ds.FlipAngle = ''
+        self.ds.ImagingFrequency = ''
+        self.ds.ImagedNucleus = ''
+        self.ds.MagneticFieldStrength = ''
+        self.ds.SoftwareVersions = ''
+        self.ds.ReconstructionDiameter = ''
+        self.ds.ReceiveCoilName = ''
+        self.ds.TransmitCoilName = ''
+        self.ds.PixelBandwidth = ''
+        self.ds.InPlanePhaseEncodingDirection = ''
+        self.ds.SAR = ''
+        self.ds.dBdt = ''
+        self.ds.B1rms = ''
+        self.ds.PatientPosition = ''
+        self.ds.AcquisitionDuration = ''
+
+        # # series – some are Philips only, so put in svr.py
+        # 'TriggerTime': 'TriggerTime',
+        # 'LowRRValue': 'LowRRValue',
+        # 'HighRRValue': 'HighRRValue',
+        # 'IntervalsAcquired': 'IntervalsAcquired',
+        # 'IntervalsRejected': 'IntervalsRejected',
+        # 'HeartRate': 'HeartRate',
+        # 'TriggerWindow': 'TriggerWindow',
+        #
+        # 'StudyInstanceUID': 'StudyInstanceUID',
+        # 'StudyID': 'StudyID',
+        #
+        # 'PhotometricInterpretation': 'PhotometricInterpretation',
+        # 'BitsAllocated': 'BitsAllocated',
+        # 'BitsStored': 'BitsStored',
+        # 'HighBit': 'HighBit',
+        # 'PixelRepresentation': 'PixelRepresentation',
+        # 'LossyImageCompression': 'LossyImageCompression',
+        #
+        # 'RequestingPhysician': 'RequestingPhysician',
+        # 'RequestingService': 'RequestingService',
+        # 'RequestedProcedureDescription': 'RequestedProcedureDescription',
+        # 'RequestedContrastAgent': 'RequestedContrastAgent',
+        # 'PerformedStationAETitle': 'PerformedStationAETitle',
+        # 'PerformedStationName': 'PerformedStationName',
+        # 'PerformedLocation': 'PerformedLocation',

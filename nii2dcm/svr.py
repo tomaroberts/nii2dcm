@@ -8,4 +8,8 @@ class DicomMRISVR(DicomMRI):
 
     def __init__(self, filename=nii2dcm_temp_filename):
         super().__init__(filename)
+
         self.ds.MRAcquisitionType = '3D'
+
+        self.ds.NumberOfPhaseEncodingSteps = ''
+        self.ds.PercentPhaseFieldOfView = ''

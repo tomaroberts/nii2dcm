@@ -135,6 +135,10 @@ class Dicom:
     def get_dataset(self):
         return self.ds
 
+    def save_as(self):
+        print("Writing DICOM to", os.path.join(os.getcwd(), self.filename))
+        self.ds.save_as(self.filename)
+
     # def initDcmHdr(self):
     #     """ create minimal dicom header
     #     - essential fields found in all MRI dicoms

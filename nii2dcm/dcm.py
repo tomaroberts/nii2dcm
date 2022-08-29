@@ -14,6 +14,7 @@ import nibabel as nib
 
 nii2dcm_temp_filename = 'nii2dcm_tempfile.dcm'
 
+
 class Dicom:
     """
     Creates basic DICOM structure
@@ -361,13 +362,3 @@ class DicomMRI(Dicom):
         self.file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
         self.ds.SOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
         self.ds.MRAcquisitionType = ''
-
-
-class DicomMRISVR(DicomMRI):
-    """
-    Creates 3D Slice-to-Volume Registration reconstruction DICOM
-    """
-
-    def __init__(self, filename=nii2dcm_temp_filename):
-        super().__init__(filename)
-        self.ds.MRAcquisitionType = '3D'

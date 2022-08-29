@@ -26,13 +26,13 @@ class Dicom:
 
     def __init__(self, filename=tempfile.NamedTemporaryFile(suffix='.dcm').name):
 
+        self.filename = filename
+
         # TODO:
         # - add in correct UIDs
         # - arrange tags into Series/Instance tags
 
         self.dcm_dictionary_update()
-
-        self.filename = filename
 
         # Creates minimal FileMeta
         self.file_meta = FileMetaDataset()

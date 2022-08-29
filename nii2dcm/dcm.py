@@ -65,7 +65,8 @@ class Dicom:
         self.ds.InstitutionName = "INSTITUTION_NAME_NONE"
         self.ds.Manufacturer = ""
         self.ds.ManufacturerModelName = ""
-        self.ds.StudyDescription = ""
+        self.ds.StudyDescription = ''
+        self.ds.StudyInstanceUID = ''
         self.ds.InstanceCreatorUID = ''
 
         self.ds.SOPClassUID = ''
@@ -246,29 +247,25 @@ class DicomMRI(Dicom):
         self.ds.PatientPosition = ''
         self.ds.AcquisitionDuration = ''
 
-        # # series – some are Philips only, so put in svr.py
-        # 'TriggerTime': 'TriggerTime',
-        # 'LowRRValue': 'LowRRValue',
-        # 'HighRRValue': 'HighRRValue',
-        # 'IntervalsAcquired': 'IntervalsAcquired',
-        # 'IntervalsRejected': 'IntervalsRejected',
-        # 'HeartRate': 'HeartRate',
-        # 'TriggerWindow': 'TriggerWindow',
-        #
-        # 'StudyInstanceUID': 'StudyInstanceUID',
-        # 'StudyID': 'StudyID',
-        #
-        # 'PhotometricInterpretation': 'PhotometricInterpretation',
-        # 'BitsAllocated': 'BitsAllocated',
-        # 'BitsStored': 'BitsStored',
-        # 'HighBit': 'HighBit',
-        # 'PixelRepresentation': 'PixelRepresentation',
-        # 'LossyImageCompression': 'LossyImageCompression',
-        #
-        # 'RequestingPhysician': 'RequestingPhysician',
-        # 'RequestingService': 'RequestingService',
-        # 'RequestedProcedureDescription': 'RequestedProcedureDescription',
-        # 'RequestedContrastAgent': 'RequestedContrastAgent',
-        # 'PerformedStationAETitle': 'PerformedStationAETitle',
-        # 'PerformedStationName': 'PerformedStationName',
-        # 'PerformedLocation': 'PerformedLocation',
+        self.ds.TriggerTime = ''
+        self.ds.LowRRValue = ''
+        self.ds.HighRRValue = ''
+        self.ds.IntervalsAcquired = ''
+        self.ds.IntervalsRejected = ''
+        self.ds.HeartRate = ''
+        self.ds.TriggerWindow = ''
+
+        self.ds.PhotometricInterpretation = ''
+        self.ds.BitsAllocated = ''
+        self.ds.BitsStored = ''
+        self.ds.HighBit = ''
+        self.ds.PixelRepresentation = ''
+        self.ds.LossyImageCompression = ''
+
+        self.ds.RequestingPhysician = ''
+        self.ds.RequestingService = ''
+        self.ds.RequestedProcedureDescription = ''
+        self.ds.RequestedContrastAgent = ''
+        self.ds.PerformedStationAETitle = ''
+        self.ds.PerformedStationName = ''
+        self.ds.PerformedLocation = ''

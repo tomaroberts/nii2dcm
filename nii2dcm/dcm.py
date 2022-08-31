@@ -253,7 +253,10 @@ class DicomMRI(Dicom):
         self.ds.HeartRate = ''
         self.ds.TriggerWindow = ''
 
-        self.ds.PhotometricInterpretation = ''
+        # nb: PresentationLUTShape dependent on PhotometricInterpretation value
+        self.ds.PhotometricInterpretation = 'MONOCHROME'
+        self.ds.PresentationLUTShape = 'IDENTITY'
+
         self.ds.BitsAllocated = ''
         self.ds.BitsStored = ''
         self.ds.HighBit = ''

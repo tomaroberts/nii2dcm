@@ -1,7 +1,6 @@
 """
 Create 3D, single-frame DICOM dataset from NIfTI file
 """
-import numpy as np
 import nibabel as nib
 import nii2dcm.nii
 

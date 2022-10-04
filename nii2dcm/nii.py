@@ -5,11 +5,6 @@ Tom Roberts
 """
 
 import numpy as np
-import nibabel as nib
-# import pydicom
-# from pydicom.dataset  import Dataset, FileDataset, FileMetaDataset
-# from pydicom.datadict import DicomDictionary, keyword_dict
-# from pydicom.sequence import Sequence
 
 
 class Nifti:

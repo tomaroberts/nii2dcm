@@ -11,70 +11,66 @@ import nibabel as nib
 # from pydicom.datadict import DicomDictionary, keyword_dict
 # from pydicom.sequence import Sequence
 
-class NII:
 
-    def assessNii(nii):
+class Nifti:
+
+    def get_nii2dcm_general_parameters(nii):
         """
-        Determine nSeries
-        :nii - nii loaded with nibabel
-        :nii_parameters - parameters to transfer to dicom header
-
-        """    
-
-    def getNiiParameters(nii):
-        
-        """
-        Get parameters from nifti to transfer to dicom
-        :nii - nii loaded with nibabel
-        :nii_parameters - parameters to transfer to dicom header
-
+        Get general NIfTI file parameters relevant for DICOM creation.
+        :nii - NIfTI loaded with nibabel
+        :nii_parameters - parameters to transfer to DICOM header
         """
 
         nii_img = nii.get_fdata()
 
-        if nii.header['dim'][0] == 3:
-            nX, nY, nZ, nF         = nii.header['dim'][1], nii.header['dim'][2], nii.header['dim'][3], 1
-            dimX, dimY, dimZ, dimT = nii.header['pixdim'][1], nii.header['pixdim'][2], nii.header['pixdim'][3], nii.header['pixdim'][4]
+        # Dimensions
+        if nii.header['dim'][4] == 1:
+            nX, nY, nZ, nF = nii.header['dim'][1], nii.header['dim'][2], nii.header['dim'][3], 1
+            dimX, dimY, dimZ = nii.header['pixdim'][1], nii.header['pixdim'][2], nii.header['pixdim'][3]
 
-        if nii.header['dim'][0] == 4:
-            nX, nY, nZ, nF         = nii.header['dim'][1], nii.header['dim'][2], nii.header['dim'][3], nii.header['dim'][4]
-            dimX, dimY, dimZ, dimT = nii.header['pixdim'][1], nii.header['pixdim'][2], nii.header['pixdim'][3], nii.header['pixdim'][4]
+        elif nii.header['dim'][4] > 1:
+            print("Warning: Nifti is not 3-dimensional.")
 
-        # number of instances
+        # Instances & Slice Spacing
         nInstances = nZ*nF
 
-        # slice location arrays
         sliceIndices = np.repeat(range(1, nZ+1), nF)
 
-        # slice locations array
         voxelSpacing = dimZ
         zLocLast = (voxelSpacing * nZ) - voxelSpacing
         sliceLoca = np.repeat( np.linspace(0, zLocLast, num=nZ), nF)
 
-        # TODO: windowing
-        # windowCenter = []
-        # windowWidth = []
-        # rescaleIntercept = []
-        # rescaleSlope = []
+        # Windowing & Signal Intensity
+        maxI = np.amax(nii_img)
+        minI = np.amin(nii_img)
+        windowCenter = round((maxI - minI) / 2)
+        windowWidth = round(maxI - minI)
+        rescaleIntercept = 0
+        rescaleSlope = 1
 
-        # nii parameters to transfer to dicom
-        nii_parameters = []
-        for iInstance in range(0,nInstances):
-            nii_parameters.append({
-                'SliceThickness': str(dimZ),
-                'SpacingBetweenSlices': str(dimZ),
-                'AcquisitionMatrix': [0, nX, nY, 0],
-                'InstanceNumber': sliceIndices[iInstance],
-                'SliceLocation': sliceLoca[iInstance],
-                'Rows': nX,
-                'Columns': nY,
-                'NumberOfSlices': nZ,
-                'PixelSpacing': [dimX, dimY],
-                'WindowCenter': str(1000),
-                'WindowWidth': str(1800),
-                'RescaleIntercept': str(0),
-                'RescaleSlope': str(21),
-            })
+        # FOV
+        fovX = nX * dimX
+        fovY = nY * dimY
+        fovZ = nZ * dimZ
 
-        return nii_parameters
-        
+        nii2dcm_general_parameters = {
+            'dimX': dimX,
+            'dimY': dimY,
+            'SliceThickness': str(dimZ),
+            'SpacingBetweenSlices': str(dimZ),
+            'AcquisitionMatrix': [0, nX, nY, 0],
+            'InstanceNumber': sliceIndices,
+            'SliceLocation': sliceLoca,
+            'Rows': nX,
+            'Columns': nY,
+            'NumberOfSlices': nZ,
+            'PixelSpacing': [dimX, dimY],
+            'FOV': [fovX, fovY, fovZ],
+            'WindowCenter': str(windowCenter),
+            'WindowWidth': str(windowWidth),
+            'RescaleIntercept': str(rescaleIntercept),
+            'RescaleSlope': str(rescaleSlope),
+        }
+
+        return nii2dcm_general_parameters
+

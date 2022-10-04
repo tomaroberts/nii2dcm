@@ -74,3 +74,56 @@ class Nifti:
 
         return nii2dcm_general_parameters
 
+    def convert_nii2dcm_slice_parameters(nii, sliceIndex):
+        """
+        Convert Nifti geometry parameters to DICOM geometry format
+        :nii - NIfTI loaded with nibabel
+        :sliceIndex - index of slice within Nifti volume
+        """
+
+        def fnT1N(A, N):
+            # Subfn: calculate T1N vector
+            # A = affine matrix [4x4]
+            # N = slice number (counting from 1)
+            T1N = A.dot([[0], [0], [N - 1], [1]])
+            return T1N
+
+        dimX = nii.header['pixdim'][1]
+        dimY = nii.header['pixdim'][2]
+        dimZ = nii.header['pixdim'][3]
+        dimF = nii.header['pixdim'][4]
+
+        # Direction Cosines & Position Parameters
+        # nb: -1 for dir cosines gives consistent orientation between Nifti and DICOM in ITK-Snap
+        A = nii.affine
+        dircosX = -1 * A[:3, 0] / dimX
+        dircosY = -1 * A[:3, 1] / dimY
+        T1N = fnT1N(A, sliceIndex)
+
+        dcm_geo_parameters = {
+            'SpacingBetweenSlices': round(float(dimZ), 2),
+            'ImagePositionPatient': [T1N[0], T1N[1], T1N[2]],
+
+            # nb: consistent orientation between Nifti and DICOM in ITK-Snap
+            'ImageOrientationPatient': [dircosY[0], dircosY[1], dircosY[2], dircosX[0], dircosX[1], dircosX[2]]
+
+            # Alternative:
+            # 'ImageOrientationPatient': [dircosX[0], dircosX[1], dircosX[2], dircosY[0], dircosY[1], dircosY[2]]
+        }
+
+        return dcm_geo_parameters
+
+    def get_nii2dcm_geometry_parameters(nii):
+        """
+        Create DICOM geometry tags from NIfTI affine
+        :nii - NIfTI loaded with nibabel
+        :sliceIndex - index of slice within Nifti volume
+        """
+
+        nInstances = nii.header['dim'][3] * nii.header['dim'][4]
+
+        nii2dcm_geometry_parameters = []
+        for iInstance in range(0, nInstances):
+            nii2dcm_geometry_parameters = nii.convert_nii2dcm_slice_parameters(nii, iInstance)
+
+        return nii2dcm_geometry_parameters

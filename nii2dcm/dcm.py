@@ -35,12 +35,6 @@ class Dicom:
 
         # Creates minimal FileMeta
         self.file_meta = FileMetaDataset()
-        self.file_meta.FileMetaInformationGroupLength = ''
-        self.file_meta.FileMetaInformationVersion = ''
-        # self.file_meta.FileMetaInformationVersion = b'\x00\x01'  # Think redundant
-        self.file_meta.MediaStorageSOPClassUID = ''
-        self.file_meta.MediaStorageSOPInstanceUID = ''
-        self.file_meta.ImplementationClassUID = ''
         self.file_meta.ImplementationVersionName = 'nii2dcm_DICOM'
 
         # Creates minimal DataSet

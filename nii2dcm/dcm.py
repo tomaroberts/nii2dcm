@@ -6,8 +6,8 @@ Tom Roberts
 
 import datetime
 import os
+import pydicom as pyd
 from pydicom.dataset import FileDataset, FileMetaDataset
-from pydicom.uid import UID
 from pydicom.datadict import DicomDictionary, keyword_dict
 
 nii2dcm_temp_filename = 'nii2dcm_tempfile.dcm'
@@ -58,7 +58,6 @@ class Dicom:
         self.ds.Manufacturer = ""
         self.ds.ManufacturerModelName = ""
         self.ds.StudyDescription = ''
-        self.ds.StudyInstanceUID = ''
         self.ds.InstanceCreatorUID = ''
 
         self.ds.SOPClassUID = ''
@@ -98,13 +97,7 @@ class Dicom:
         self.ds.SliceLocation = ""
         self.ds.ImagePositionPatient = ['0', '0', '0']
 
-        # per Series tags
-        self.ds.SeriesInstanceUID = ""
-        self.ds.SeriesNumber = ""
-        self.ds.AcquisitionNumber = ""
-
         # # Omitted for now:
-        # 'FrameOfReferenceUID': uid_frame_of_reference,  # per SVR – think to do with localizer
         # 'TemporalPositionIdentifier': '1',
         # 'NumberOfTemporalPositions': '1',
         # 'PositionReferenceIndicator': '',  # MC said v important, can be undefined
@@ -118,6 +111,9 @@ class Dicom:
         # 'PerformingPhysicianName': 'PerformingPhysicianName',
         # 'OperatorsName': 'OperatorsName',
 
+        self.init_study_tags()
+        self.init_series_tags()
+
     def get_file_meta(self):
         return self.file_meta
 
@@ -127,6 +123,37 @@ class Dicom:
     def save_as(self):
         print("Writing DICOM to", os.path.join(os.getcwd(), self.filename))
         self.ds.save_as(self.filename)
+
+    def init_study_tags(self):
+        """
+        Create Study Tags
+        - these tags are fixed across Instances and Series
+        """
+
+        # Possible per Study Tags
+        # StudyInstanceUID
+
+        self.ds.StudyInstanceUID = pyd.uid.generate_uid(None)
+
+    def init_series_tags(self):
+        """
+        Create Series Tags
+        - these tags are fixed across Instances
+        """
+
+        # Possible per Series Tags
+        # SeriesInstanceUID
+        # FrameOfReferenceUID
+        # SeriesDate
+        # SeriesTime
+        # AcquisitionDate
+        # AcquisitionTime
+        # SeriesNumber
+
+        self.ds.SeriesInstanceUID = pyd.uid.generate_uid(None)
+        self.ds.FrameOfReferenceUID = pyd.uid.generate_uid(None)
+        self.ds.SeriesNumber = ""
+        self.ds.AcquisitionNumber = ""
 
     def dcm_dictionary_update(self):
         """

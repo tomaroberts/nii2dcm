@@ -42,6 +42,7 @@ class Dicom:
         self.ds.is_implicit_VR = False
         self.ds.is_little_endian = True
         self.ds.SpecificCharacterSet = "ISO_IR 100"
+        self.ds.BitsAllocated = 16  # TODO: investigate automation/possible values as DICOM creation fails if empty
         self.ds.ImageType = ['DERIVED', 'SECONDARY']
         self.ds.ProtocolName = "nii2dcm_DICOM"
 
@@ -278,7 +279,7 @@ class DicomMRI(Dicom):
         self.ds.PhotometricInterpretation = 'MONOCHROME'
         self.ds.PresentationLUTShape = 'IDENTITY'
 
-        self.ds.BitsAllocated = ''
+        # self.ds.BitsAllocated = ''
         self.ds.BitsStored = ''
         self.ds.HighBit = ''
         self.ds.PixelRepresentation = ''

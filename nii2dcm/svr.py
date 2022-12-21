@@ -1,5 +1,5 @@
 """
-classes for creating 3D MRI SVR DICOMs
+Classes for creating 3D MRI SVR DICOMs
 
 Tom Roberts
 """
@@ -16,6 +16,6 @@ class DicomMRISVR(DicomMRI):
         super().__init__(filename)
 
         self.ds.MRAcquisitionType = '3D'
-
         self.ds.NumberOfPhaseEncodingSteps = ''
         self.ds.PercentPhaseFieldOfView = ''
+

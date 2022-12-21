@@ -83,3 +83,7 @@ venv.bak/
 # DICOM filenames
 IM_*
 _im*
+
+# NIfTI filenames
+*.nii
+*.nii.gz

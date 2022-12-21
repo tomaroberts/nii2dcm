@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=64.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nii2dcm"
+version = "0.1.0"
+description = "NIfTI file to DICOM conversion"
+readme = "README.md"
+authors = [{ name = "Tom Roberts", email = "t.roberts@kcl.ac.uk" }]
+
+[project.scripts]
+nii2dcm = "nii2dcm.__main__:cli"

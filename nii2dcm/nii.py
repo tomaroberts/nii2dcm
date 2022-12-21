@@ -77,6 +77,7 @@ class Nifti:
             'Rows': nX,
             'Columns': nY,
             'NumberOfSlices': nZ,
+            'NumberOfInstances': nZ*nF,
             'PixelSpacing': [dimX, dimY],
             'FOV': [fovX, fovY, fovZ],
             'WindowCenter': str(windowCenter),

@@ -9,7 +9,7 @@
 <h1 align="center">nii2dcm</h1>
 
   <p align="center">
-    NIfTI to DICOM file conversion with Python
+    NIfTI to DICOM file creation with Python
     <br />
     <a href="https://github.com/tomaroberts/nii2dcm"><strong>Explore the docs »</strong></a>
     <br />
@@ -32,8 +32,8 @@ clinical institutions. It is a vast and complicated standard. The
 research because it is a comparatively simple data format, generally stripped of identifiable patient data and with far 
 fewer metadata fields.
 
-Researchers often convert DICOM files to NIfTI files using tools such 
-[Chris Rorden's dcm2niix](https://github.com/rordenlab/dcm2niix/) software. However, the reverse process is much harder.
+Researchers often convert DICOM files to NIfTI files using tools such as 
+[dcm2niix](https://github.com/rordenlab/dcm2niix/). However, the reverse process is much harder.
 
 **nii2dcm** is designed to convert a NIfTI file (.nii/.nii.gz) into a single-frame DICOM Series in one line. e.g.:
 

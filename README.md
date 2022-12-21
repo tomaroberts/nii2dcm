@@ -67,7 +67,7 @@ To install and run nii2dcm locally follow these steps.
    ```
 3. Install the Python requirements
    ```sh
-   pip install -r requirements
+   pip install -r requirements.txt
    ```
 4. Install nii2dcm
    ```sh

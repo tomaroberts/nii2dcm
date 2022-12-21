@@ -37,7 +37,7 @@ Researchers often convert DICOM files to NIfTI files using tools such
 
 **nii2dcm** is designed to convert a NIfTI file (.nii/.nii.gz) into a single-frame DICOM Series in one line. e.g.:
 
-```shell
+```sh
 nii2dcm nifti-file.nii.gz dicom-output-directory
 ```
 
@@ -75,7 +75,7 @@ To install and run nii2dcm locally follow these steps.
    python setup.py install
    ```
 5. Verify installation by displaying nii2dcm help information
-   ```shell
+   ```sh
    nii2dcm -h
    ```
 
@@ -88,18 +88,18 @@ To install and run nii2dcm locally follow these steps.
 
 nii2dcm is designed to be pointed at a single `.nii` or `.nii.gz` and generate a single-frame DICOM dataset:
 
-```shell
+```sh
 nii2dcm nifti-file.nii.gz dicom-output-directory
 ```
 
 Currently, nii2dcm provides three Python classes corresponding to different DICOM types. These are:
-* Dicom – generic DICOM class
-* DicomMRI – MRI DICOM class
-* DicomMRISVR – 3D [SVR](https://svrtk.github.io/) MRI DICOM class
+* **Dicom** – generic DICOM class
+* **DicomMRI** – MRI DICOM class
+* **DicomMRISVR** – 3D [SVR](https://svrtk.github.io/) MRI DICOM class
 
 The created DICOM type can be specified with the `-d` or `--dicom-type` flag. For example, the following will output a 
 3D MRI SVR DICOM dataset
-```shell
+```sh
 nii2dcm SVR-output.nii.gz path/to/output/dir/ -d SVR
 ```
 
@@ -112,7 +112,7 @@ nii2dcm SVR-output.nii.gz path/to/output/dir/ -d SVR
 This project is in its infancy! Expect :bug::ant::beetle:
 
 There are many things I would like to test and implement. 
-[Raise an Issue](https://github.com/github_username/repo_name/issues) if you have ideas or suggestions.
+[Raise an Issue](https://github.com/tomaroberts/nii2dcm/issues) if you have ideas or suggestions.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

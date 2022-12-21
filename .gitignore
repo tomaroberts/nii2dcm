@@ -79,3 +79,7 @@ venv.bak/
 .idea/
 
 .DS_Store
+
+# DICOM filenames
+IM_*
+_im*

@@ -35,6 +35,7 @@ class Dicom:
 
         # Creates minimal FileMeta
         self.file_meta = FileMetaDataset()
+        self.file_meta.TransferSyntaxUID = '1.2.840.10008.1.2.1'  # Explicit VR Little Endian
         self.file_meta.ImplementationVersionName = 'nii2dcm_DICOM'
 
         # Creates minimal DataSet

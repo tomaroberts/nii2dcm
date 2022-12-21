@@ -1,3 +1,7 @@
+"""
+Test DICOM creation from different classes/subclasses
+"""
+
 import nii2dcm.dcm
 import nii2dcm.svr
 

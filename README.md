@@ -35,7 +35,7 @@ fewer metadata fields.
 Researchers often convert DICOM files to NIfTI files using tools such as 
 [dcm2niix](https://github.com/rordenlab/dcm2niix/). However, the reverse process is much harder.
 
-**nii2dcm** is designed to convert a NIfTI file (.nii/.nii.gz) into a single-frame DICOM Series in one line. e.g.:
+**nii2dcm** is designed to convert a NIfTI file (.nii/.nii.gz) into a single-frame DICOM Series in one line, e.g.:
 
 ```sh
 nii2dcm nifti-file.nii.gz dicom-output-directory

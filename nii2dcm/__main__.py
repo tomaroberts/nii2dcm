@@ -3,6 +3,7 @@ import argparse
 
 from pathlib import Path
 
+from nii2dcm.run import run_nii2dcm
 
 
 def cli(args=None):
@@ -34,6 +35,9 @@ def cli(args=None):
     if not output_dir.exists():
         print(f"The output directory '{output_dir}' does not exist")
         raise SystemExit(1)
+
+    # execute nii2dcm
+    run_nii2dcm(input_file, output_dir, args.dicom_type)
 
 
 if __name__ == "__main__":

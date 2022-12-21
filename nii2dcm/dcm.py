@@ -1,5 +1,5 @@
 """
-classes for creating a dicom from scratch
+Classes for creating a DICOM from scratch
 
 Tom Roberts
 """

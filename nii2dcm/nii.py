@@ -1,5 +1,5 @@
 """
-classes for manipulating nifti files
+Classes for manipulating NIfTI files
 
 Tom Roberts
 """

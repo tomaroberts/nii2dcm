@@ -4,7 +4,6 @@ creates a DICOM Series
 
 import os
 import pydicom as pyd
-import nii2dcm
 
 
 def write_slice(dcm, img_data, instance_index, output_dir):
@@ -13,17 +12,16 @@ def write_slice(dcm, img_data, instance_index, output_dir):
 
     dcm – nii2dcm DICOM object
     img_data - [nX, nY, nSlice] image pixel data, such as from NIfTI file
-    instance_index – slice index
+    instance_index – instance index (important: counts from 0)
     output_dir – output DICOM file save location
     """
 
-    output_filename = r'output/IM_%04d' % instance_index
+    output_filename = r'IM_%04d' % (instance_index + 1)  # begin filename from 1, e.g. IM_0001
 
     img_slice = img_data[:, :, instance_index]
 
-    # Instance tags – unique to current slice
+    # Instance UID – unique to current slice
     dcm.ds.SOPInstanceUID = pyd.uid.generate_uid(None)
-    dcm.ds.InstanceNumber = instance_index
 
     # write pixel data
     dcm.ds.PixelData = img_slice.tobytes()

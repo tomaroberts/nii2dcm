@@ -1,5 +1,9 @@
 """
-Create 3D Fetal Brain MRI SVRTK single-frame DICOM dataset from NIfTI file
+Create 3D Fetal Brain MRI SVRTK single-frame DICOM dataset NIfTI file
+
+Tested with data from the following scanners:
+- 1.5T Philips Ingenia
+- 1.5T Siemens Sola
 """
 import os
 import nibabel as nib
@@ -9,12 +13,19 @@ import nii2dcm.nii
 import nii2dcm.svr
 
 
+NII2DCM_DIR = r'/Users/tr17/code/nii2dcm'
+INPUT_DIR   = r'/Users/tr17/code/nii2dcm/input/'
+OUTPUT_DIR  = r'/Users/tr17/code/nii2dcm/output'
+
+if not os.path.isdir(OUTPUT_DIR):
+    os.makedirs(OUTPUT_DIR)
+
 # Load Nifti file
-niiInPath = r'/Users/tr17/data/DicomRecon/previous-recon/SVR-output.nii.gz'
+niiInPath = os.path.join(INPUT_DIR, 'SVR-output.nii.gz')
 nii = nib.load(niiInPath)
 
 # Set output directory
-dcmOutPath = r'/Users/tr17/code/nii2dcm/output'
+dcmOutPath = OUTPUT_DIR
 if os.path.exists(dcmOutPath):
     if not os.path.isdir(dcmOutPath):
         raise ValueError('The DICOM output path must be a directory.')

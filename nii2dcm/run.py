@@ -36,7 +36,9 @@ def run_nii2dcm(input_nii_path, output_dcm_path, dicom_type=None):
         dicom = nii2dcm.dcm.DicomMRI('nii2dcm_dicom_mri.dcm')
     if dicom_type is not None and dicom_type.upper() in ['SVR']:
         dicom = nii2dcm.svr.DicomMRISVR('nii2dcm_dicom_mri_svr.dcm')
-        nii_img[nii_img == -1] = 0  # set background pixels = 0 (-1 in SVRTK)
+        nii_img = nii.get_fdata()
+        nii_img[nii_img < 0] = 0  # set background pixels = 0 (negative in SVRTK)
+        nii_img = nii_img.astype("uint16")
 
     # transfer Series tags
     nii2dcm.dcm_writer.transfer_nii_hdr_series_tags(dicom, nii2dcm_parameters)

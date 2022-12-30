@@ -18,4 +18,5 @@ class DicomMRISVR(DicomMRI):
         self.ds.MRAcquisitionType = '3D'
         self.ds.NumberOfPhaseEncodingSteps = ''
         self.ds.PercentPhaseFieldOfView = ''
+        self.ds.BitsAllocated = 16
 

@@ -47,7 +47,7 @@ nii2dcm.dcm_writer.transfer_nii_hdr_series_tags(TestDicomMRISVR, nii2dcm_paramet
 # Get NIfTI pixel data
 # TODO: create method in Nifti class – need to think about -1 value treatment
 nii_img = nii.get_fdata()
-nii_img[nii_img == -1] = 0  # set background pixels = 0 (-1 in SVRTK)
+nii_img[nii_img < 0] = 0  # set background pixels = 0 (negative in SVRTK)
 nii_img = nii_img.astype("uint16")  # match DICOM datatype
 
 # Set custom tags

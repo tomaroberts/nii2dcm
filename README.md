@@ -56,25 +56,16 @@ To install and run nii2dcm locally follow these steps.
 
 ### Installation
 
-1. Setup a Python virtual environment
+Setup a Python virtual environment (recommended)
    ```sh
    python -m venv nii2dcm-venv
    source nii2dcm-venv/bin/activate
    ```
-2. Clone this repo
+Install nii2dcm
    ```sh
-   git clone https://github.com/tomaroberts/nii2dcm.git
+   pip install nii2dcm
    ```
-3. Install the Python requirements
-   ```sh
-   pip install -r requirements.txt
-   ```
-4. Install nii2dcm
-   ```sh
-   cd nii2dcm
-   python setup.py install
-   ```
-5. Verify installation by displaying nii2dcm help information
+
    ```sh
    nii2dcm -h
    ```

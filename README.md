@@ -66,6 +66,7 @@ Install nii2dcm
    pip install nii2dcm
    ```
 
+Verify installation by displaying nii2dcm help information
    ```sh
    nii2dcm -h
    ```
@@ -83,7 +84,7 @@ nii2dcm is designed to be pointed at a single `.nii` or `.nii.gz` and generate a
 nii2dcm nifti-file.nii.gz dicom-output-directory
 ```
 
-Currently, nii2dcm provides three Python classes corresponding to different DICOM types. These are:
+Currently, nii2dcm provides three Python classes in order to build different DICOM types. These are:
 * **Dicom** – generic DICOM class
 * **DicomMRI** – MRI DICOM class
 * **DicomMRISVR** – 3D [SVR](https://svrtk.github.io/) MRI DICOM class
@@ -116,6 +117,16 @@ There are many things I would like to test and implement.
 * [NHS Topol Digital Fellowships scheme](https://topol.hee.nhs.uk/digital-fellowships/) - for the protected time to work 
 on this
 
+
+<!-- Links -->
+## Links
+Some useful, free image viewing software:
+* [ITK-Snap](http://www.itksnap.org/) - fast, simple interface. Opens NIfTI and DICOM
+* [MITK Workbench](https://www.mitk.org/wiki/The_Medical_Imaging_Interaction_Toolkit_(MITK)) - excellent for viewing 
+multiple image datasets in the same geometric space. Opens NIfTI and DICOM
+* [3D Slicer](https://www.slicer.org/) - comprehensive imaging software
+* [Horos](https://horosproject.org/) - similar to a hospital clinical information system
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -127,28 +138,6 @@ The Software has been developed for research purposes only and is not a clinical
 <!-- Licence -->
 ## Licence 
 
-BSD 3-Clause License
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-disclaimer in the documentation and/or other materials provided with the distribution.
-
-3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote
-products derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-Copyright (c) 2021-2022 Tom Roberts. All rights reserved.
+[BSD 3-Clause License can be found here](LICENCE)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

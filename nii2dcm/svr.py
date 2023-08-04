@@ -16,7 +16,26 @@ class DicomMRISVR(DicomMRI):
         super().__init__(filename)
 
         self.ds.MRAcquisitionType = '3D'
-        self.ds.NumberOfPhaseEncodingSteps = ''
-        self.ds.PercentPhaseFieldOfView = ''
-        self.ds.BitsAllocated = 16
+        self.ds.AcquisitionDuration = ''
+
+        self.ds.RequestingPhysician = ''
+        self.ds.RequestingService = ''
+        self.ds.RequestedProcedureDescription = ''
+        self.ds.RequestedContrastAgent = ''
+        self.ds.PerformedStationAETitle = ''
+        self.ds.PerformedStationName = ''
+        self.ds.PerformedLocation = ''
+
+        # # Omit for now:
+        # 'PositionReferenceIndicator': '',  # MC said v important, can be undefined
+        # 'InstitutionAddress': 'InstitutionAddress',
+        # 'ReferringPhysicianName': 'ReferringPhysicianName',
+        # 'CodeValue': 'CodeValue',
+        # 'CodingSchemeDesignator': 'CodingSchemeDesignator',
+        # 'CodeMeaning': 'CodeMeaning',
+        # 'StationName': 'StationName',
+        # 'InstitutionalDepartmentName': 'InstitutionalDepartmentName',
+        # 'PerformingPhysicianName': 'PerformingPhysicianName',
+        # 'OperatorsName': 'OperatorsName',
+
 

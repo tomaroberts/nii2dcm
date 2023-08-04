@@ -43,7 +43,6 @@ class Dicom:
         self.ds.is_implicit_VR = False
         self.ds.is_little_endian = True
         self.ds.SpecificCharacterSet = "ISO_IR 100"
-        self.ds.BitsAllocated = 16  # TODO: investigate automation/possible values as DICOM creation fails if empty
         self.ds.ImageType = ['DERIVED', 'SECONDARY']
         self.ds.ProtocolName = "nii2dcm_DICOM"
 
@@ -61,6 +60,7 @@ class Dicom:
         self.ds.ManufacturerModelName = ""
         self.ds.StudyDescription = ''
         self.ds.InstanceCreatorUID = ''
+        self.ds.SoftwareVersions = ''
 
         self.ds.SOPClassUID = ''
         self.ds.Modality = ''
@@ -83,8 +83,11 @@ class Dicom:
         self.ds.Rows = ""
         self.ds.Columns = ""
         self.ds.PixelSpacing = ""
-        self.ds.SamplesPerPixel = ""
-        self.ds.ImageOrientationPatient = ['1', '0', '0', '0', '1', '0']
+        self.ds.PixelRepresentation = ''
+        self.ds.PatientPosition = ''
+        self.ds.ImageOrientationPatient = ['1', '0', '0', '0', '1', '0']  # TODO: decide default
+
+        self.ds.LossyImageCompression = ''
 
         self.ds.RescaleIntercept = ""
         self.ds.RescaleSlope = ""
@@ -98,20 +101,6 @@ class Dicom:
         self.ds.SpacingBetweenSlices = ""
         self.ds.SliceLocation = ""
         self.ds.ImagePositionPatient = ['0', '0', '0']
-
-        # # Omitted for now:
-        # 'TemporalPositionIdentifier': '1',
-        # 'NumberOfTemporalPositions': '1',
-        # 'PositionReferenceIndicator': '',  # MC said v important, can be undefined
-        # 'InstitutionAddress': 'InstitutionAddress',
-        # 'ReferringPhysicianName': 'ReferringPhysicianName',
-        # 'CodeValue': 'CodeValue',
-        # 'CodingSchemeDesignator': 'CodingSchemeDesignator',
-        # 'CodeMeaning': 'CodeMeaning',
-        # 'StationName': 'StationName',
-        # 'InstitutionalDepartmentName': 'InstitutionalDepartmentName',
-        # 'PerformingPhysicianName': 'PerformingPhysicianName',
-        # 'OperatorsName': 'OperatorsName',
 
         self.init_study_tags()
         self.init_series_tags()
@@ -236,60 +225,98 @@ class Dicom:
 
 class DicomMRI(Dicom):
     """
-    Creates basic MRI DICOM structure
+    Builds upon Dicom class by adding MR Image Module attributes
+
+    The DICOM tags in this subclass make a minimal MR DICOM according to the NEMA DICOM standard, specifically
+    the MR Image Module in section C.8.3:
+    https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.8.3.html
+
+    Tags labelled ":missing:" are defined in the NEMA MR standard, but not found in real DICOMs exported from an
+    MR scanner
     """
 
     def __init__(self, filename=nii2dcm_temp_filename):
         super().__init__(filename)
 
         self.ds.Modality = 'MR'
+        # TODO check these UIDs are correct
         self.file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
         self.ds.SOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
-        self.ds.MRAcquisitionType = ''
-        self.ds.ScanningSequence = ''
-        self.ds.SequenceVariant = ''
-        self.ds.ScanOptions = ''
+
+        # ImageType
+        # NEMA defines MR-specific ImageType terms here:
+        # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.8.3.html#sect_C.8.3.1.1.1
+        # For now, will inherit from Dicom class
+        self.ds.ImageType = self.ds.ImageType
+
+        self.ds.SamplesPerPixel = ''
+
+        # PhotometricInterpretation
+        # TODO: decide MONOCHROME1 or MONOCHROME2 as default
+        # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.7.6.3.html#sect_C.7.6.3.1.2
+        self.ds.PhotometricInterpretation = 'MONOCHROME2'
+
+        # PresentationLUTShape
+        # depends on PhotometricInterpretation: https://dicom.innolitics.com/ciods/mr-image/general-image/20500020
+        if self.ds.PhotometricInterpretation == 'MONOCHROME2':
+            self.ds.PresentationLUTShape = 'IDENTITY'
+        elif self.ds.PhotometricInterpretation == 'MONOCHROME1':
+            self.ds.PresentationLUTShape = 'INVERSE'
+
+        self.ds.BitsAllocated = 16  # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.8.3.html#sect_C.8.3.1.1.4
+        self.ds.BitsStored = ''  # TODO: determine if able to leave blank, or need to set = 12
+        self.ds.HighBit = ''  # HighBit = BitsStored - 1
+        self.ds.ScanningSequence = 'RM'  # :missing:, 'RM' = Research Mode
+        self.ds.SequenceVariant = ''  # :missing:, TODO: set = 'NONE' ?
+        self.ds.ScanOptions = ''  # :missing:
+        self.ds.MRAcquisitionType = ''  # 2D or 3D
         self.ds.RepetitionTime = ''
         self.ds.EchoTime = ''
-        self.ds.EchoNumbers = ''
-        self.ds.FlipAngle = ''
+        self.ds.EchoTrainLength = ''
+        self.ds.InversionTime = ''
+        self.ds.TriggerTime = ''
+        self.ds.SequenceName = ''
+        self.ds.AngioFlag = ''  # :missing:
+        self.ds.NumberOfAverages = ''
         self.ds.ImagingFrequency = ''
         self.ds.ImagedNucleus = ''
+        self.ds.EchoNumbers = ''
         self.ds.MagneticFieldStrength = ''
-        self.ds.SoftwareVersions = ''
-        self.ds.ReconstructionDiameter = ''
+        self.ds.NumberOfPhaseEncodingSteps = ''  # :missing:
+        self.ds.PercentSampling = ''  # TODO set?
+        self.ds.PercentPhaseFieldOfView = ''  # TODO set?
+        self.ds.PixelBandwidth = ''
+        self.ds.NominalInterval = ''  # :missing:
+        self.ds.BeatRejectionFlag = ''  # :missing:
+        self.ds.LowRRValue = ''  # :missing:
+        self.ds.HighRRValue = ''  # :missing:
+        self.ds.IntervalsAcquired = ''  # :missing:
+        self.ds.IntervalsRejected = ''  # :missing:
+        self.ds.PVCRejection = ''  # :missing:
+        self.ds.SkipBeats = ''  # :missing:
+        self.ds.HeartRate = ''
+        self.ds.CardiacNumberOfImages = ''
+        self.ds.TriggerWindow = ''
+        self.ds.ReconstructionDiameter = ''  # :missing:
         self.ds.ReceiveCoilName = ''
         self.ds.TransmitCoilName = ''
-        self.ds.PixelBandwidth = ''
-        self.ds.InPlanePhaseEncodingDirection = ''
+        self.ds.AcquisitionMatrix = ''  # :missing:
+        self.ds.InPlanePhaseEncodingDirection = ''  # ROW or COLUMN
+        self.ds.FlipAngle = ''
         self.ds.SAR = ''
+        self.ds.VariableFlipAngleFlag = ''  # :missing:
         self.ds.dBdt = ''
+        self.ds.TemporalPositionIdentifier = ''  # :missing:
+        self.ds.NumberOfTemporalPositions = ''
+        self.ds.TemporalResolution = ''  # :missing:
+
+        # Currently omitting, but part of NEMA MR Image module:
+        # NEMA Table 10-7 “General Anatomy Optional Macro Attributes”
+
+        # Currently omitting, but part of NEMA MR Image module:
+        # NEMA Table 10-25 “Optional View and Slice Progression Direction Macro Attributes”
+
+        self.ds.IsocenterPosition = ''  # :missing:
         self.ds.B1rms = ''
-        self.ds.PatientPosition = ''
-        self.ds.AcquisitionDuration = ''
 
-        self.ds.TriggerTime = ''
-        self.ds.LowRRValue = ''
-        self.ds.HighRRValue = ''
-        self.ds.IntervalsAcquired = ''
-        self.ds.IntervalsRejected = ''
-        self.ds.HeartRate = ''
-        self.ds.TriggerWindow = ''
 
-        # nb: PresentationLUTShape dependent on PhotometricInterpretation value
-        self.ds.PhotometricInterpretation = 'MONOCHROME'
-        self.ds.PresentationLUTShape = 'IDENTITY'
-
-        # self.ds.BitsAllocated = ''
-        self.ds.BitsStored = ''
-        self.ds.HighBit = ''
-        self.ds.PixelRepresentation = ''
-        self.ds.LossyImageCompression = ''
-
-        self.ds.RequestingPhysician = ''
-        self.ds.RequestingService = ''
-        self.ds.RequestedProcedureDescription = ''
-        self.ds.RequestedContrastAgent = ''
-        self.ds.PerformedStationAETitle = ''
-        self.ds.PerformedStationName = ''
-        self.ds.PerformedLocation = ''

@@ -20,6 +20,7 @@ class Dicom:
     Assumptions:
     - is_implicit_VR = False
     - is_little_endian = True
+    - ImageOrientationPatient hard-coded
 
     """
 
@@ -28,8 +29,10 @@ class Dicom:
         self.filename = filename
 
         # TODO:
-        # - add in correct UIDs
-        # - arrange tags into Series/Instance tags
+        #  - add in correct UIDs
+        #  - arrange tags according to NEMA DICOM modules, e.g. Patient, General Study, Image Pixel, etc. (use
+        #  Innolitics DICOM Standard browser to guide)
+        #  - possibly arrange tags into Series/Instance tags
 
         self.dcm_dictionary_update()
 
@@ -148,8 +151,12 @@ class Dicom:
 
     def dcm_dictionary_update(self):
         """
-        Update Pydicom DicomDictionary object with non-standard Private tags.
+        Update Pydicom DicomDictionary object with non-standard Private tags. Note: these tags are not added to the
+        instantiated nii2dcm Dicom object; the DicomDictionary object is just updated meaning that these tags are now
+        available to be written if the user desires.
+
         Tuple definitions: (VR, VM, description, is_retired flag, keyword)
+
         See: https://pydicom.github.io/pydicom/stable/auto_examples/metadata_processing/plot_add_dict_entries.html
         """
 

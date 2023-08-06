@@ -29,19 +29,18 @@ class Dicom:
         self.filename = filename
 
         # TODO:
-        #  - add in correct UIDs
         #  - arrange tags according to NEMA DICOM modules, e.g. Patient, General Study, Image Pixel, etc. (use
         #  Innolitics DICOM Standard browser to guide)
         #  - possibly arrange tags into Series/Instance tags
 
         self.dcm_dictionary_update()
 
-        # Creates minimal FileMeta
+        # Instantiates minimal Pydicom FileMetaDataset object
         self.file_meta = FileMetaDataset()
         self.file_meta.TransferSyntaxUID = '1.2.840.10008.1.2.1'  # Explicit VR Little Endian
         self.file_meta.ImplementationVersionName = 'nii2dcm_DICOM'
 
-        # Creates minimal DataSet
+        # Instantiates minimal DataSet object
         self.ds = FileDataset(filename, {}, file_meta=self.file_meta, preamble=b"\0" * 128)
         self.ds.is_implicit_VR = False
         self.ds.is_little_endian = True

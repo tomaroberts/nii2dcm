@@ -65,8 +65,8 @@ class Dicom:
         self.ds.InstanceCreatorUID = ''
         self.ds.SoftwareVersions = ''
 
-        self.ds.SOPClassUID = ''
-        self.ds.Modality = ''
+        self.ds.SOPClassUID = ''  # initiated, should be defined by subclass
+        self.ds.Modality = ''  # initiated, should be defined by subclass
 
         dt = datetime.datetime.now()
         dateStr = dt.strftime('%Y%m%d')

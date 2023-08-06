@@ -246,7 +246,10 @@ class DicomMRI(Dicom):
         super().__init__(filename)
 
         self.ds.Modality = 'MR'
-        # TODO check these UIDs are correct
+
+        # MR Image Storage SOP Class
+        # UID = 1.2.840.10008.5.1.4.1.1.4
+        # https://dicom.nema.org/dicom/2013/output/chtml/part04/sect_I.4.html
         self.file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
         self.ds.SOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
 
@@ -270,9 +273,13 @@ class DicomMRI(Dicom):
         elif self.ds.PhotometricInterpretation == 'MONOCHROME1':
             self.ds.PresentationLUTShape = 'INVERSE'
 
-        self.ds.BitsAllocated = 16  # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.8.3.html#sect_C.8.3.1.1.4
+        # Bits Allocated
+        # defined to equal 16 for MR Image Module
+        # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.8.3.html#sect_C.8.3.1.1.4
+        self.ds.BitsAllocated = 16
         self.ds.BitsStored = ''  # TODO: determine if able to leave blank, or need to set = 12
         self.ds.HighBit = ''  # HighBit = BitsStored - 1
+
         self.ds.ScanningSequence = 'RM'  # :missing:, 'RM' = Research Mode
         self.ds.SequenceVariant = ''  # :missing:, TODO: set = 'NONE' ?
         self.ds.ScanOptions = ''  # :missing:

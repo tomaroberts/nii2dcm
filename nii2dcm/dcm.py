@@ -6,6 +6,8 @@ Tom Roberts
 
 import datetime
 import os
+from random import randint
+
 import pydicom as pyd
 from pydicom.dataset import FileDataset, FileMetaDataset
 from pydicom.datadict import DicomDictionary, keyword_dict
@@ -169,7 +171,7 @@ class Dicom:
 
         self.ds.SeriesInstanceUID = pyd.uid.generate_uid(None)
         self.ds.FrameOfReferenceUID = pyd.uid.generate_uid(None)
-        self.ds.SeriesNumber = ''
+        self.ds.SeriesNumber = str(randint(1000, 9999))  # 4 digit number to avoid conflict
         self.ds.AcquisitionNumber = ''  # Innolitics says this is in General Image Module, but NEMA says it is not...
 
     # TODO move this function to new utils file

@@ -10,6 +10,24 @@ import pydicom as pyd
 from pydicom.dataset import FileDataset, FileMetaDataset
 from pydicom.datadict import DicomDictionary, keyword_dict
 
+from nii2dcm.modules import (
+    patient,
+    general_study,
+    patient_study,
+    general_series,
+    frame_of_reference,
+    general_equipment,
+    general_acquisition,
+    general_image,
+    general_reference,
+    image_plane,
+    image_pixel,
+    mr_image,
+    voi_lut,
+    sop_common,
+    common_instance_reference,
+)
+
 nii2dcm_temp_filename = 'nii2dcm_tempfile.dcm'
 
 
@@ -28,11 +46,6 @@ class Dicom:
 
         self.filename = filename
 
-        # TODO:
-        #  - arrange tags according to NEMA DICOM modules, e.g. Patient, General Study, Image Pixel, etc. (use
-        #  Innolitics DICOM Standard browser to guide)
-        #  - possibly arrange tags into Series/Instance tags
-
         self.dcm_dictionary_update()
 
         # Instantiates minimal Pydicom FileMetaDataset object
@@ -44,29 +57,38 @@ class Dicom:
         self.ds = FileDataset(filename, {}, file_meta=self.file_meta, preamble=b"\0" * 128)
         self.ds.is_implicit_VR = False
         self.ds.is_little_endian = True
-        self.ds.SpecificCharacterSet = "ISO_IR 100"
         self.ds.ImageType = ['DERIVED', 'SECONDARY']
-        self.ds.ProtocolName = "nii2dcm_DICOM"
 
-        self.ds.PatientName = "Test^Firstname"
-        self.ds.PatientID = "12345678"
-        self.ds.AccessionNumber = "ABCXYZ"
-        self.ds.PatientBirthDate = ""
-        self.ds.PatientSex = ""
-        self.ds.PatientAge = ""
-        self.ds.PatientWeight = ""
-        self.ds.BodyPartExamined = ""
+        """
+        Create Composite IOD by adding Modules to Dicom object
+        """
+        # TODO
+        #  - modules below are from MR Image IOD Module Table (A.4.3)
+        #  - some are probably irrelevant to say, CT Image CIOD, therefore all/most of these should be shifted to
+        #  DicomMRI subclass
+        #  - equivalent list of add_module() calls should be created for CT, SC, US, etc.
+        patient.add_module(self)
+        general_study.add_module(self)
+        patient_study.add_module(self)
+        general_series.add_module(self)
+        frame_of_reference.add_module(self)
+        general_equipment.add_module(self)
+        general_acquisition.add_module(self)
 
-        self.ds.InstitutionName = "INSTITUTION_NAME_NONE"
-        self.ds.Manufacturer = ""
-        self.ds.ManufacturerModelName = ""
-        self.ds.StudyDescription = ''
-        self.ds.InstanceCreatorUID = ''
-        self.ds.SoftwareVersions = ''
+        general_image.add_module(self)
+        general_reference.add_module(self)
+        image_plane.add_module(self)
+        image_pixel.add_module(self)
+        voi_lut.add_module(self)
+        sop_common.add_module(self)
+        common_instance_reference.add_module(self)
 
-        self.ds.SOPClassUID = ''  # initiated, should be defined by subclass
-        self.ds.Modality = ''  # initiated, should be defined by subclass
-
+        """
+        Set Dicom Date/Time
+        Important: doing this once sets all Instances/Series/Study creation dates and times to the same values. Whereas, 
+        doing this within the Modules would every so slightly offset the times
+        """
+        # TODO shift to utils.py and propagate to Modules, or, create method within this Dicom class
         dt = datetime.datetime.now()
         dateStr = dt.strftime('%Y%m%d')
         timeStr = dt.strftime('%H%M%S.%f')  # long format with micro seconds
@@ -82,26 +104,28 @@ class Dicom:
         self.ds.InstanceCreationDate = dateStr
         self.ds.InstanceCreationTime = timeStr
 
-        self.ds.Rows = ""
-        self.ds.Columns = ""
-        self.ds.PixelSpacing = ""
-        self.ds.PixelRepresentation = ''
-        self.ds.PatientPosition = ''
-        self.ds.ImageOrientationPatient = ['1', '0', '0', '0', '1', '0']  # TODO: decide default
+        """
+        Set some default Attribute values
+        """
+        # TODO
+        #  - decide if this is the best way to implement setting default values of important Attributes
+        #  - probably makes more sense to hard-code these in subclasses, e.g. DicomMRI, DicomCT, etc, so that they are
+        #  not hard-coded across different imaging modalities, where some might be irrelevant
 
-        self.ds.LossyImageCompression = ''
+        # ImageOrientationPatient
+        # hard-coded, probably better way to define based on NIfTI values
+        self.ds.ImageOrientationPatient = ['1', '0', '0', '0', '1', '0']
 
-        self.ds.RescaleIntercept = ""
-        self.ds.RescaleSlope = ""
-        self.ds.WindowCenter = ""
-        self.ds.WindowWidth = ""
+        # Display Attributes
+        # NB: RescaleIntercept and RescaleSlope do NOT appear to be in MR Image Module, but are in CT Image, Secondary
+        # Capture and Enhanced MR Modules, hence for MRI must define in this class or within DicomMRI class
+        self.ds.RescaleIntercept = ''
+        self.ds.RescaleSlope = ''
+        self.ds.WindowCenter = ''
+        self.ds.WindowWidth = ''
 
-        # per Instance tags
-        self.ds.SOPInstanceUID = ""
-        self.ds.InstanceNumber = ""
-        self.ds.SliceThickness = ""
-        self.ds.SpacingBetweenSlices = ""
-        self.ds.SliceLocation = ""
+        # per Instance Attributes
+        # initialised with hard-coded value below, but overwritten with transfer_nii_hdr_instance_tags()
         self.ds.ImagePositionPatient = ['0', '0', '0']
 
         self.init_study_tags()
@@ -145,9 +169,10 @@ class Dicom:
 
         self.ds.SeriesInstanceUID = pyd.uid.generate_uid(None)
         self.ds.FrameOfReferenceUID = pyd.uid.generate_uid(None)
-        self.ds.SeriesNumber = ""
-        self.ds.AcquisitionNumber = ""
+        self.ds.SeriesNumber = ''
+        self.ds.AcquisitionNumber = ''  # Innolitics says this is in General Image Module, but NEMA says it is not...
 
+    # TODO move this function to new utils file
     def dcm_dictionary_update(self):
         """
         Update Pydicom DicomDictionary object with non-standard Private tags. Note: these tags are not added to the
@@ -231,19 +256,15 @@ class Dicom:
 
 class DicomMRI(Dicom):
     """
-    Builds upon Dicom class by adding MR Image Module attributes
-
-    The DICOM tags in this subclass make a minimal MR DICOM according to the NEMA DICOM standard, specifically
-    the MR Image Module in section C.8.3:
-    https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.8.3.html
-
-    Tags labelled ":missing:" are defined in the NEMA MR standard, but not found in real DICOMs exported from an
-    MR scanner
+    DicomMRI subclass adds MR Image Module to Dicom object
     """
 
     def __init__(self, filename=nii2dcm_temp_filename):
         super().__init__(filename)
 
+        """
+        Set DICOM attributes which are located outside of the MR Image Module to MR-specific values 
+        """
         self.ds.Modality = 'MR'
 
         # MR Image Storage SOP Class
@@ -252,84 +273,9 @@ class DicomMRI(Dicom):
         self.file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
         self.ds.SOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
 
-        # ImageType
-        # NEMA defines MR-specific ImageType terms here:
-        # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.8.3.html#sect_C.8.3.1.1.1
-        # For now, will inherit from Dicom class
-        self.ds.ImageType = self.ds.ImageType
-
-        self.ds.SamplesPerPixel = ''
-
-        # PhotometricInterpretation
-        # TODO: decide MONOCHROME1 or MONOCHROME2 as default
-        # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.7.6.3.html#sect_C.7.6.3.1.2
-        self.ds.PhotometricInterpretation = 'MONOCHROME2'
-
-        # PresentationLUTShape
-        # depends on PhotometricInterpretation: https://dicom.innolitics.com/ciods/mr-image/general-image/20500020
-        if self.ds.PhotometricInterpretation == 'MONOCHROME2':
-            self.ds.PresentationLUTShape = 'IDENTITY'
-        elif self.ds.PhotometricInterpretation == 'MONOCHROME1':
-            self.ds.PresentationLUTShape = 'INVERSE'
-
-        # Bits Allocated
-        # defined to equal 16 for MR Image Module
-        # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.8.3.html#sect_C.8.3.1.1.4
-        self.ds.BitsAllocated = 16
-        self.ds.BitsStored = ''  # TODO: determine if able to leave blank, or need to set = 12
-        self.ds.HighBit = ''  # HighBit = BitsStored - 1
-
-        self.ds.ScanningSequence = 'RM'  # :missing:, 'RM' = Research Mode
-        self.ds.SequenceVariant = ''  # :missing:, TODO: set = 'NONE' ?
-        self.ds.ScanOptions = ''  # :missing:
-        self.ds.MRAcquisitionType = ''  # 2D or 3D
-        self.ds.RepetitionTime = ''
-        self.ds.EchoTime = ''
-        self.ds.EchoTrainLength = ''
-        self.ds.InversionTime = ''
-        self.ds.TriggerTime = ''
-        self.ds.SequenceName = ''
-        self.ds.AngioFlag = ''  # :missing:
-        self.ds.NumberOfAverages = ''
-        self.ds.ImagingFrequency = ''
-        self.ds.ImagedNucleus = ''
-        self.ds.EchoNumbers = ''
-        self.ds.MagneticFieldStrength = ''
-        self.ds.NumberOfPhaseEncodingSteps = ''  # :missing:
-        self.ds.PercentSampling = ''  # TODO set?
-        self.ds.PercentPhaseFieldOfView = ''  # TODO set?
-        self.ds.PixelBandwidth = ''
-        self.ds.NominalInterval = ''  # :missing:
-        self.ds.BeatRejectionFlag = ''  # :missing:
-        self.ds.LowRRValue = ''  # :missing:
-        self.ds.HighRRValue = ''  # :missing:
-        self.ds.IntervalsAcquired = ''  # :missing:
-        self.ds.IntervalsRejected = ''  # :missing:
-        self.ds.PVCRejection = ''  # :missing:
-        self.ds.SkipBeats = ''  # :missing:
-        self.ds.HeartRate = ''
-        self.ds.CardiacNumberOfImages = ''
-        self.ds.TriggerWindow = ''
-        self.ds.ReconstructionDiameter = ''  # :missing:
-        self.ds.ReceiveCoilName = ''
-        self.ds.TransmitCoilName = ''
-        self.ds.AcquisitionMatrix = ''  # :missing:
-        self.ds.InPlanePhaseEncodingDirection = ''  # ROW or COLUMN
-        self.ds.FlipAngle = ''
-        self.ds.SAR = ''
-        self.ds.VariableFlipAngleFlag = ''  # :missing:
-        self.ds.dBdt = ''
-        self.ds.TemporalPositionIdentifier = ''  # :missing:
-        self.ds.NumberOfTemporalPositions = ''
-        self.ds.TemporalResolution = ''  # :missing:
-
-        # Currently omitting, but part of NEMA MR Image module:
-        # NEMA Table 10-7 “General Anatomy Optional Macro Attributes”
-
-        # Currently omitting, but part of NEMA MR Image module:
-        # NEMA Table 10-25 “Optional View and Slice Progression Direction Macro Attributes”
-
-        self.ds.IsocenterPosition = ''  # :missing:
-        self.ds.B1rms = ''
+        """
+        Add MR Image Module to Dicom object
+        """
+        mr_image.add_module(self)
 
 

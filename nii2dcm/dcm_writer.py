@@ -61,8 +61,9 @@ def transfer_nii_hdr_instance_tags(dcm, nii2dcm_parameters, instance_index):
     """
 
     # Possible per Instance Tags
-    # SOPInstanceUID
+    # SOPInstanceUID (set within write_slice function)
     # InstanceNumber
+    # SliceLocation
     # ImagePositionPatient
 
     dcm.ds.InstanceNumber = nii2dcm_parameters['InstanceNumber'][instance_index]

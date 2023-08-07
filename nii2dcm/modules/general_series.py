@@ -30,4 +30,3 @@ def add_module(dcm):
     dcm.ds.PatientPosition = ''
 
     dcm.ds.AccessionNumber = "ABCXYZ"
-    

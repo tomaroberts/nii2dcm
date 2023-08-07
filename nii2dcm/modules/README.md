@@ -21,3 +21,7 @@ These can be viewed interactively with the
 The files in this `modules` directory generate key DICOM attributes associated with the corresponding Module, e.g. 
 `general_study.py` creates the attributes for the 
 [General Study Module](https://dicom.innolitics.com/ciods/mr-image/general-study).
+
+> **_Important Note/Reminder:_** Some Modules listed in the Table above have yet to be implemented in nii2dcm – such as 
+'Contrast/Bolus', 'Overplay Plane' and various others – because they are currently surplus to my requirements. Further modules can 
+easily be created by adding them to this `modules` directory. 

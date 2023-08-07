@@ -15,5 +15,9 @@ types. Below is the Module Table for the MR Image IOD:
 
 ![mr-image-iod-module-table.png](../../assets/mr-image-iod-module-table.png)
 
+These can be viewed interactively with the 
+[Innolitics DICOM Standard Browser](https://dicom.innolitics.com/ciods/mr-image).
+
 The files in this `modules` directory generate key DICOM attributes associated with the corresponding Module, e.g. 
-`general_study.py` creates the attributes for the General Study Module. 
+`general_study.py` creates the attributes for the 
+[General Study Module](https://dicom.innolitics.com/ciods/mr-image/general-study).

@@ -1,8 +1,10 @@
+"""
+nii2dcm entrypoint code and command line interface (CLI)
+"""
+
 import sys
 import argparse
-
 from pathlib import Path
-
 from nii2dcm.run import run_nii2dcm
 
 

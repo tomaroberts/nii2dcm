@@ -1,6 +1,8 @@
 """
 nii2dcm runner
 """
+from os.path import abspath
+
 import nibabel as nib
 import pydicom as pyd
 
@@ -57,12 +59,16 @@ def run_nii2dcm(input_nii_path, output_dcm_path, dicom_type=None, ref_dicom_file
     # transfer Series tags from NIfTI
     transfer_nii_hdr_series_tags(dicom, nii2dcm_parameters)
 
-    # transfer Series tags from DICOM reference
+    # transfer tags from reference DICOM
+    # IMPORTANT: this deliberately happens last in the DICOM tag manipulation process so that any tag values transferred
+    # from the reference DICOM override any values initialised by nii2dcm
     if ref_dicom_file is not None:
         transfer_ref_dicom_series_tags(dicom, ref_dicom)
 
-    # write DICOM files, instance-by-instance
-
+    """
+    Write DICOM files
+    - Transfer NIfTI parameters and write slices, instance-by-instance
+    """
     print('nii2dcm: writing DICOM files ...')  # TODO use logger
 
     for instance_index in range(0, nii2dcm_parameters['NumberOfInstances']):
@@ -70,10 +76,7 @@ def run_nii2dcm(input_nii_path, output_dcm_path, dicom_type=None, ref_dicom_file
         # Transfer Instance tags
         transfer_nii_hdr_instance_tags(dicom, nii2dcm_parameters, instance_index)
 
-        # transfer Instances tags from DICOM reference
-        if ref_dicom_file is not None:
-            # TODO create function to merge in Instance Attributes
-            pass
-
         # Write slice
         write_slice(dicom, nii_img, instance_index, output_dcm_path)
+
+    print(f'nii2dcm: DICOM files written to: {abspath(output_dcm_path)}')  # TODO use logger

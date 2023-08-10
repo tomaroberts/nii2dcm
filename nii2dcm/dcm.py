@@ -11,6 +11,7 @@ from random import randint
 import pydicom as pyd
 from pydicom.dataset import FileDataset, FileMetaDataset
 
+from nii2dcm.utils import dcm_dictionary_update
 from nii2dcm.modules import (
     patient,
     general_study,
@@ -47,7 +48,8 @@ class Dicom:
 
         self.filename = filename
 
-        self.dcm_dictionary_update()
+        # TODO implement dcm_dictionary_update() function, most likely at this location in code
+        # dcm_dictionary_update()
 
         # Instantiates minimal Pydicom FileMetaDataset object
         self.file_meta = FileMetaDataset()

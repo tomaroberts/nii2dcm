@@ -17,5 +17,5 @@ def add_module(dcm):
     dcm.ds.PatientOrientation = ''
     dcm.ds.ContentDate = ''
     dcm.ds.ContentTime = ''
-    dcm.ds.ImageType = ''
+    dcm.ds.ImageType = ['SECONDARY', 'DERIVED']
 

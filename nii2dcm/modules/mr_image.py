@@ -40,8 +40,8 @@ def add_module(dcm):
     # defined to equal 16 for MR Image Module
     # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.8.3.html#sect_C.8.3.1.1.4
     dcm.ds.BitsAllocated = 16
-    dcm.ds.BitsStored = ''  # TODO: determine if able to leave blank, or need to set = 12
-    dcm.ds.HighBit = ''  # HighBit = BitsStored - 1
+    dcm.ds.BitsStored = 12
+    dcm.ds.HighBit = dcm.ds.BitsStored - 1
 
     dcm.ds.ScanningSequence = 'RM'  # :missing:, 'RM' = Research Mode
     dcm.ds.SequenceVariant = ''  # :missing:, TODO: set = 'NONE' ?

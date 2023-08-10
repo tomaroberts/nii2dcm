@@ -76,3 +76,101 @@ def transfer_nii_hdr_instance_tags(dcm, nii2dcm_parameters, instance_index):
         str(nii2dcm_parameters['ImagePositionPatient'][instance_index][1]),
         str(nii2dcm_parameters['ImagePositionPatient'][instance_index][2]),
     ]
+
+
+def transfer_ref_dicom_series_tags(dcm, ref_dcm):
+    """
+    Transfer Series level DICOM Attributes from reference DICOM to nii2dcm DICOM
+
+    dcm – nii2dcm DICOM object
+    ref_dcm - reference DICOM object
+    """
+
+    # list of DICOM Attributes to transfer from ref_dcm
+    # TODO(tomaroberts) move this to Dicom class or DicomMRI, DicomCT, etc. subclasses – preferable for subclasses to
+    #  specify attributes to transfer by default as different CIODs will have unique attributes
+
+    # TODO(tomaroberts) figure out whether transfer SQ Sequence blocks, e.g.:
+    #  ProcedureCodeSequence,
+    #  ReferencedStudySequence,
+    #  ConversionSourceAttributesSequence
+    #  - conflicts if _included_?
+
+    attributes_to_transfer = [
+        'StudyDate',
+        'SeriesDate',
+        'AcquisitionDate',
+        'AccessionNumber',
+        'InstitutionName',
+        'InstitutionAddress',
+        'ReferringPhysicianName',
+        'StationName',
+        'StudyDescription',
+        'ProcedureCodeSequence',  # SQ Sequence
+        'InstitutionalDepartmentName',
+        'PerformingPhysicianName',
+        'OperatorsName',
+        'ManufacturerModelName',
+        'ReferencedStudySequence',  # SQ Sequence
+        'RelatedSeriesSequence',  # SQ Sequence
+
+        'PatientName',
+        'PatientID',
+        'PatientBirthDate',
+        'PatientSex',
+        'PatientAge',
+        'PatientSize',
+        'PatientWeight',
+        'BodyPartExamined',
+
+        # MR Image Module Attributes
+        'ScanningSequence',
+        'SequenceVariant',
+        'ScanOptions',
+        'SequenceName',
+        'AngioFlag',
+        'RepetitionTime',
+        'EchoTime',
+        'InversionTime',
+        'NumberOfAverages',
+        'ImagingFrequency',
+        'ImagedNucleus',
+        'MagneticFieldStrength',
+        'NumberOfPhaseEncodingSteps',  # superfluous?
+        'EchoTrainLength',  # superfluous?
+        'PercentSampling',
+        'PercentPhaseFieldOfView',
+        'PixelBandwidth',
+        'DeviceSerialNumber',
+        'SoftwareVersions',
+        'BeatRejectionFlag',
+        'CardiacNumberOfImages',
+        'ReceiveCoilName',
+        'TransmitCoilName',
+        'InPlanePhaseEncodingDirection',
+        'FlipAngle',
+        'SAR',
+        # 'PatientPosition',  # omit for now
+
+        # General Study Module Attributes
+        'StudyInstanceUID',  # Important to transfer as enables new DICOM to be filed in original Study
+        'StudyID',
+        'AcquisitionNumber',  # include or set in Dicom subclass?
+        'FrameOfReferenceUID',  # include?
+        'NumberOfTemporalPositions',
+
+        'ConversionSourceAttributesSequence',  # SQ Sequence
+
+        'RequestAttributesSequence',  # SQ Sequence
+
+        'RequestingPhysician',
+        'RequestingService',
+    ]
+
+    for current_attribute in attributes_to_transfer:
+        try:
+            attribute_value = getattr(ref_dcm, current_attribute)
+            setattr(dcm.ds, current_attribute, attribute_value)
+        except AttributeError as e:
+            # TODO once logger implemented, replace print statement with log warning
+            print(f'Warning: ref_dicom {e} therefore could not transfer')

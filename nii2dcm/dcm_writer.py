@@ -27,7 +27,7 @@ def write_slice(dcm, img_data, instance_index, output_dir):
     dcm.ds.PixelData = img_slice.tobytes()
 
     # write DICOM file
-    dcm.ds.save_as( os.path.join( output_dir, output_filename ), write_like_original=False )
+    dcm.ds.save_as(os.path.join(output_dir, output_filename), write_like_original=False)
 
 
 def transfer_nii_hdr_series_tags(dcm, nii2dcm_parameters):
@@ -40,11 +40,14 @@ def transfer_nii_hdr_series_tags(dcm, nii2dcm_parameters):
 
     dcm.ds.Rows = nii2dcm_parameters['Rows']
     dcm.ds.Columns = nii2dcm_parameters['Columns']
-    dcm.ds.PixelSpacing = [round(float(nii2dcm_parameters['dimX']),2), round(float(nii2dcm_parameters['dimY']),2)]
+    dcm.ds.PixelSpacing = [round(float(nii2dcm_parameters['dimX']), 2), round(float(nii2dcm_parameters['dimY']), 2)]
     dcm.ds.SliceThickness = nii2dcm_parameters['SliceThickness']
-    dcm.ds.SpacingBetweenSlices = round(float(nii2dcm_parameters['SpacingBetweenSlices']),2)
+    dcm.ds.SpacingBetweenSlices = round(float(nii2dcm_parameters['SpacingBetweenSlices']), 2)
     dcm.ds.ImageOrientationPatient = nii2dcm_parameters['ImageOrientationPatient']
-    # dcm.ds.AcquisitionMatrix = nii2dcm_parameters['AcquisitionMatrix']
+    dcm.ds.AcquisitionMatrix = nii2dcm_parameters['AcquisitionMatrix']
+    dcm.ds.SmallestImagePixelValue = int(nii2dcm_parameters['SmallestImagePixelValue']) \
+        if int(nii2dcm_parameters['SmallestImagePixelValue']) > 0 else 0  # SmallestImagePixelValue must be >= 0
+    dcm.ds.LargestImagePixelValue = int(nii2dcm_parameters['LargestImagePixelValue'])
     dcm.ds.WindowCenter = nii2dcm_parameters['WindowCenter']
     dcm.ds.WindowWidth = nii2dcm_parameters['WindowWidth']
     dcm.ds.RescaleIntercept = nii2dcm_parameters['RescaleIntercept']

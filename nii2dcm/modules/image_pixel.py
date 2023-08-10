@@ -23,7 +23,14 @@ def add_module(dcm):
     dcm.ds.BitsAllocated = ''
     dcm.ds.BitsStored = ''
     dcm.ds.HighBit = ''
-    dcm.ds.PixelRepresentation = ''
+
+    # PixelRepresentation
+    # Enumerated values either: unsigned integer or two's complement
+    # Setting = 0, as observed in real DICOM
+    dcm.ds.PixelRepresentation = 0
+
+    dcm.ds.SmallestImagePixelValue = ''
+    dcm.ds.LargestImagePixelValue = ''
 
     # PixelData written in dcm_writer via Pydicom
     dcm.ds.PixelData = ''

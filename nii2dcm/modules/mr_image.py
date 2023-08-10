@@ -22,7 +22,7 @@ def add_module(dcm):
     # For now, will inherit
     dcm.ds.ImageType = dcm.ds.ImageType
 
-    dcm.ds.SamplesPerPixel = ''
+    dcm.ds.SamplesPerPixel = 1
 
     # PhotometricInterpretation
     # TODO: decide MONOCHROME1 or MONOCHROME2 as default
@@ -44,7 +44,7 @@ def add_module(dcm):
     dcm.ds.HighBit = dcm.ds.BitsStored - 1
 
     dcm.ds.ScanningSequence = 'RM'  # :missing:, 'RM' = Research Mode
-    dcm.ds.SequenceVariant = ''  # :missing:, TODO: set = 'NONE' ?
+    dcm.ds.SequenceVariant = ''  # :missing:
     dcm.ds.ScanOptions = ''  # :missing:
     dcm.ds.MRAcquisitionType = ''  # 2D or 3D
     dcm.ds.RepetitionTime = ''

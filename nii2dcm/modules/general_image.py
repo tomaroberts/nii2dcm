@@ -19,3 +19,9 @@ def add_module(dcm):
     dcm.ds.ContentTime = ''
     dcm.ds.ImageType = ['SECONDARY', 'DERIVED']
 
+    # LossyImageCompression
+    # Enumerated values either:
+    # 00 = no lossy compression
+    # 01 = lossy compression
+    dcm.ds.LossyImageCompression = '00'
+

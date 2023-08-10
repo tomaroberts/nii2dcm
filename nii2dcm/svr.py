@@ -18,6 +18,11 @@ class DicomMRISVR(DicomMRI):
         self.ds.MRAcquisitionType = '3D'
         self.ds.AcquisitionDuration = ''
 
+        self.ds.ProtocolName = 'SVRTK_RESEARCH_RECONSTRUCTION'
+        self.ds.SeriesDescription = 'SVRTK_RESEARCH_RECONSTRUCTION'
+
+        self.ds.PatientPosition = ''  # does this affect 3D display? inherit from ref_dicom (e.g. [HFS]) or leave blank?
+
         self.ds.RequestingPhysician = ''
         self.ds.RequestingService = ''
         self.ds.RequestedProcedureDescription = ''

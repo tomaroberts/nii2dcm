@@ -2,23 +2,26 @@
 nii2dcm runner
 """
 import nibabel as nib
+import pydicom as pyd
 
 import nii2dcm.nii
 import nii2dcm.svr
 from nii2dcm.dcm_writer import (
     transfer_nii_hdr_series_tags,
     transfer_nii_hdr_instance_tags,
+    transfer_ref_dicom_series_tags,
     write_slice
 )
 
 
-def run_nii2dcm(input_nii_path, output_dcm_path, dicom_type=None):
+def run_nii2dcm(input_nii_path, output_dcm_path, dicom_type=None, ref_dicom_file=None):
     """
     Execute NIfTI to DICOM conversion
 
     :param input_nii_path: input .nii/.nii.gz file
     :param output_dcm_path: output DICOM directory
     :param dicom_type: specified by user on command-line
+    :param ref_dicom: reference DICOM file for transferring Attributes
     """
 
     # load NIfTI
@@ -46,8 +49,17 @@ def run_nii2dcm(input_nii_path, output_dcm_path, dicom_type=None):
         nii_img[nii_img < 0] = 0  # set background pixels = 0 (negative in SVRTK)
         nii_img = nii_img.astype("uint16")
 
+    # load reference DICOM object
+    # --ref_dicom_file specified on command line
+    if ref_dicom_file is not None:
+        ref_dicom = pyd.dcmread(ref_dicom_file)
+
     # transfer Series tags from NIfTI
     transfer_nii_hdr_series_tags(dicom, nii2dcm_parameters)
+
+    # transfer Series tags from DICOM reference
+    if ref_dicom_file is not None:
+        transfer_ref_dicom_series_tags(dicom, ref_dicom)
 
     # write DICOM files, instance-by-instance
 
@@ -57,6 +69,11 @@ def run_nii2dcm(input_nii_path, output_dcm_path, dicom_type=None):
 
         # Transfer Instance tags
         transfer_nii_hdr_instance_tags(dicom, nii2dcm_parameters, instance_index)
+
+        # transfer Instances tags from DICOM reference
+        if ref_dicom_file is not None:
+            # TODO create function to merge in Instance Attributes
+            pass
 
         # Write slice
         write_slice(dicom, nii_img, instance_index, output_dcm_path)

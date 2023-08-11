@@ -21,26 +21,11 @@ class DicomMRISVR(DicomMRI):
         self.ds.ProtocolName = 'SVRTK_RESEARCH_RECONSTRUCTION'
         self.ds.SeriesDescription = 'SVRTK_RESEARCH_RECONSTRUCTION'
 
-        self.ds.PatientPosition = ''  # does this affect 3D display? inherit from ref_dicom (e.g. [HFS]) or leave blank?
+        """
+        DICOM Attributes to transfer from DICOM supplied using --ref_dicom CLI option        
+        IMPORTANT: this list overrides the equivalent list in DicomMRI class
+        """
 
-        self.ds.RequestingPhysician = ''
-        self.ds.RequestingService = ''
-        self.ds.RequestedProcedureDescription = ''
-        self.ds.RequestedContrastAgent = ''
-        self.ds.PerformedStationAETitle = ''
-        self.ds.PerformedStationName = ''
-        self.ds.PerformedLocation = ''
-
-        # # Omit for now:
-        # 'PositionReferenceIndicator': '',  # MC said v important, can be undefined
-        # 'InstitutionAddress': 'InstitutionAddress',
-        # 'ReferringPhysicianName': 'ReferringPhysicianName',
-        # 'CodeValue': 'CodeValue',
-        # 'CodingSchemeDesignator': 'CodingSchemeDesignator',
-        # 'CodeMeaning': 'CodeMeaning',
-        # 'StationName': 'StationName',
-        # 'InstitutionalDepartmentName': 'InstitutionalDepartmentName',
-        # 'PerformingPhysicianName': 'PerformingPhysicianName',
-        # 'OperatorsName': 'OperatorsName',
-
-
+        # Not transferring PatientPosition
+        # - Does this affect 3D display? Leave empty for now
+        self.attributes_to_transfer.remove('PatientPosition')

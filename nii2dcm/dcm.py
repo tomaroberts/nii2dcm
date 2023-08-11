@@ -63,13 +63,12 @@ class Dicom:
         self.ds.ImageType = ['DERIVED', 'SECONDARY']
 
         """
-        Create Composite IOD by adding Modules to Dicom object
+        Initialise Composite IOD by adding Modules to Dicom object
+        
+        Common Modules below taken by comparing A.3.3 (CT) and A.4.3 (MRI) CIODs to determine shared Modules. Other 
+        modalities assumed to have similar composition. Modules unique to a specific imaging modality are added within 
+        the respective subclass. e.g. MR Image Module is added within the nii2dcm DicomMRI class
         """
-        # TODO
-        #  - modules below are from MR Image IOD Module Table (A.4.3)
-        #  - some are probably irrelevant to say, CT Image CIOD, therefore all/most of these should be shifted to
-        #  DicomMRI subclass
-        #  - equivalent list of add_module() calls should be created for CT, SC, US, etc.
         patient.add_module(self)
         general_study.add_module(self)
         patient_study.add_module(self)
@@ -108,7 +107,7 @@ class Dicom:
         self.ds.InstanceCreationTime = timeStr
 
         """
-        Set some default Attribute values
+        Set some default Attribute values for _all_ DICOM CIODs
         """
         # TODO
         #  - decide if this is the best way to implement setting default values of important Attributes
@@ -178,7 +177,9 @@ class Dicom:
 
 class DicomMRI(Dicom):
     """
-    DicomMRI subclass adds MR Image Module to Dicom object
+    DicomMRI subclass
+    - Sets appropriate SOPClass UIDs for MR
+    - Adds MR Image Module to Dicom object
     """
 
     def __init__(self, filename=nii2dcm_temp_filename):
@@ -196,8 +197,86 @@ class DicomMRI(Dicom):
         self.ds.SOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
 
         """
-        Add MR Image Module to Dicom object
+        Initialise subclass CIOD Modules
         """
         mr_image.add_module(self)
+
+        """
+        DICOM Attributes to transfer from DICOM supplied using --ref_dicom CLI option
+        """
+        # TODO(tomaroberts) figure out whether transfer SQ Sequence blocks, e.g.:
+        #  ProcedureCodeSequence,
+        #  ReferencedStudySequence,
+        #  ConversionSourceAttributesSequence
+        #  - conflicts if _included_?
+
+        self.attributes_to_transfer = [
+            'StudyDate',
+            'SeriesDate',
+            'AcquisitionDate',
+            'AccessionNumber',
+            'InstitutionName',
+            'InstitutionAddress',
+            'ReferringPhysicianName',
+            'StationName',
+            'StudyDescription',
+            'ProcedureCodeSequence',  # SQ Sequence
+            'InstitutionalDepartmentName',
+            'PerformingPhysicianName',
+            'OperatorsName',
+            'ManufacturerModelName',
+            'ReferencedStudySequence',  # SQ Sequence
+            'RelatedSeriesSequence',  # SQ Sequence
+
+            'PatientName',
+            'PatientID',
+            'PatientBirthDate',
+            'PatientSex',
+            'PatientAge',
+            'PatientSize',
+            'PatientWeight',
+            'BodyPartExamined',
+
+            # MR Image Module Attributes
+            'ScanningSequence',
+            'SequenceVariant',
+            'ScanOptions',
+            'MRAcquisitionType',
+            'SequenceName',
+            'AngioFlag',
+            'RepetitionTime',
+            'EchoTime',
+            'InversionTime',
+            'NumberOfAverages',
+            'ImagingFrequency',
+            'ImagedNucleus',
+            'MagneticFieldStrength',
+            'NumberOfPhaseEncodingSteps',
+            'EchoTrainLength',
+            'PercentSampling',
+            'PercentPhaseFieldOfView',
+            'PixelBandwidth',
+            'DeviceSerialNumber',
+            'SoftwareVersions',
+            'BeatRejectionFlag',
+            'CardiacNumberOfImages',
+            'ReceiveCoilName',
+            'TransmitCoilName',
+            'InPlanePhaseEncodingDirection',
+            'FlipAngle',
+            'SAR',
+            'PatientPosition',
+
+            # General Study Module Attributes
+            'StudyInstanceUID',  # Important: enables new DICOM to be filed in original Study
+            'StudyID',
+            'AcquisitionNumber',  # include or set in Dicom subclass?
+            'FrameOfReferenceUID',  # include?
+            'NumberOfTemporalPositions',
+            'ConversionSourceAttributesSequence',  # SQ Sequence
+            'RequestAttributesSequence',  # SQ Sequence
+            'RequestingPhysician',
+            'RequestingService',
+        ]
 
 

@@ -235,7 +235,7 @@ class DicomMRI(Dicom):
 
         self.attributes_to_transfer = [
             'StudyDate',
-            'SeriesDate',
+            'SeriesDate',  # TODO omit so SeriesDate = when DICOM created, not acquired? Consistent with SeriesTime
             'AcquisitionDate',
             'AccessionNumber',
             'InstitutionName',

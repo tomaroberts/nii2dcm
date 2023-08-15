@@ -8,7 +8,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setup(
     name="nii2dcm",
-    version="0.1.0",
+    version="0.1.1",
     description='nii2dcm: NIfTI to DICOM creation with Python',
     author='Tom Roberts',
     url='https://github.com/tomaroberts/nii2dcm',
@@ -16,10 +16,10 @@ setup(
     long_description_content_type="text/markdown",
     packages=find_packages(include=['nii2dcm', 'nii2dcm.*']),
     install_requires=[
-        'numpy==1.23.2',
-        'matplotlib==3.6.2',
-        'nibabel==5.0.0',
-        'pydicom==2.3.0'
+        'numpy',
+        'matplotlib',
+        'nibabel',
+        'pydicom'
     ],
     setup_requires=['flake8'],
     entry_points={

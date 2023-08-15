@@ -12,23 +12,21 @@ import pydicom as pyd
 from pydicom.dataset import FileDataset, FileMetaDataset
 
 from nii2dcm.utils import dcm_dictionary_update
-from nii2dcm.modules import (
-    patient,
-    general_study,
-    patient_study,
-    general_series,
-    frame_of_reference,
-    general_equipment,
-    general_acquisition,
-    general_image,
-    general_reference,
-    image_plane,
-    image_pixel,
-    mr_image,
-    voi_lut,
-    sop_common,
-    common_instance_reference,
-)
+from nii2dcm.modules.patient import Patient
+from nii2dcm.modules.general_study import GeneralStudy
+from nii2dcm.modules.patient_study import PatientStudy
+from nii2dcm.modules.general_series import GeneralSeries
+from nii2dcm.modules.frame_of_reference import FrameOfReference
+from nii2dcm.modules.general_equipment import GeneralEquipment
+from nii2dcm.modules.general_acquisition import GeneralAcquisition
+from nii2dcm.modules.general_image import GeneralImage
+from nii2dcm.modules.general_reference import GeneralReference
+from nii2dcm.modules.image_plane import ImagePlane
+from nii2dcm.modules.image_pixel import ImagePixel
+from nii2dcm.modules.mr_image import MRImage
+from nii2dcm.modules.sop_common import SOPCommon
+from nii2dcm.modules.common_instance_reference import CommonInstanceReference
+from nii2dcm.modules.voi_lut import VOILUT
 
 nii2dcm_temp_filename = 'nii2dcm_tempfile.dcm'
 
@@ -64,26 +62,8 @@ class Dicom:
 
         """
         Initialise Composite IOD by adding Modules to Dicom object
-        
-        Common Modules below taken by comparing A.3.3 (CT) and A.4.3 (MRI) CIODs to determine shared Modules. Other 
-        modalities assumed to have similar composition. Modules unique to a specific imaging modality are added within 
-        the respective subclass. e.g. MR Image Module is added within the nii2dcm DicomMRI class
         """
-        patient.add_module(self)
-        general_study.add_module(self)
-        patient_study.add_module(self)
-        general_series.add_module(self)
-        frame_of_reference.add_module(self)
-        general_equipment.add_module(self)
-        general_acquisition.add_module(self)
-
-        general_image.add_module(self)
-        general_reference.add_module(self)
-        image_plane.add_module(self)
-        image_pixel.add_module(self)
-        voi_lut.add_module(self)
-        sop_common.add_module(self)
-        common_instance_reference.add_module(self)
+        self.add_base_modules()
 
         """
         Set Dicom Date/Time
@@ -132,6 +112,49 @@ class Dicom:
 
         self.init_study_tags()
         self.init_series_tags()
+
+    def add_module(self, module_obj):
+        """
+        Update Dicom object with DICOM elements from Module object
+        :param module_obj: Module object
+        :return: updated Dicom object
+        """
+
+        # TODO add logger statements
+        # logging(f'Updating Dicom object with DICOM elements from Module: {module.name}.')
+
+        for elem in module_obj.ds:
+            # logging('Original Element:', self.ds[elem.keyword])
+            # logging('Module Element:', elem)
+            self.ds.add(elem)
+            # logging('New Tag:', self.ds[elem.keyword])
+
+    def add_base_modules(self):
+        """
+        Initialise Composite IOD by adding Modules to Dicom object
+
+        Common Modules below taken by comparing A.3.3 (CT) and A.4.3 (MRI) CIODs to determine shared Modules. Other
+        modalities assumed to have similar composition. Modules unique to a specific imaging modality are added within
+        the respective subclass. e.g. MR Image Module is added within the nii2dcm DicomMRI class
+        """
+        self.add_module(Patient())
+        self.add_module(GeneralStudy())
+        self.add_module(PatientStudy())
+        self.add_module(GeneralSeries())
+        self.add_module(FrameOfReference())
+        self.add_module(GeneralEquipment())
+
+        # Image IE
+        # TODO potentially transfer these Modules to Dicom subclasses because they are image-based,
+        #  whereas Modules above are generic, non-image Modules, e.g. patient details, file information etc.
+        self.add_module(GeneralImage())
+        self.add_module(GeneralAcquisition())
+        self.add_module(GeneralReference())
+        self.add_module(ImagePlane())
+        self.add_module(ImagePixel())
+        self.add_module(SOPCommon())
+        self.add_module(CommonInstanceReference())
+        self.add_module(VOILUT())
 
     def get_file_meta(self):
         return self.file_meta
@@ -199,7 +222,7 @@ class DicomMRI(Dicom):
         """
         Initialise subclass CIOD Modules
         """
-        mr_image.add_module(self)
+        self.add_module(MRImage())
 
         """
         DICOM Attributes to transfer from DICOM supplied using --ref_dicom CLI option

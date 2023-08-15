@@ -5,13 +5,15 @@ C.7.4.1
 https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.7.4.html#sect_C.7.4.1
 """
 
+from nii2dcm.module import Module
 
-def add_module(dcm):
-    """
-    Adds Module to Pydicom Dataset object
-    :param dcm: input Pydicom Dataset object
-    :return: updated Pydicom Dataset object
-    """
 
-    dcm.ds.FrameOfReferenceUID = ''
-    # dcm.ds.PositionReferenceIndicator = ''  # TODO add robustly
+class FrameOfReference(Module):
+
+    def __init__(self):
+        super().__init__()
+
+        self.module_type = 'FrameOfReference'
+
+        self.ds.FrameOfReferenceUID = ''
+        # self.ds.PositionReferenceIndicator = ''  # TODO add robustly

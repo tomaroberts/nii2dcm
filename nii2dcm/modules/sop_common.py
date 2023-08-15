@@ -5,22 +5,24 @@ C.12.1
 https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.12.html#sect_C.12.1
 """
 
+from nii2dcm.module import Module
 
-def add_module(dcm):
-    """
-    Adds Module to Pydicom Dataset object
-    :param dcm: input Pydicom Dataset object
-    :return: updated Pydicom Dataset object
-    """
 
-    dcm.ds.SOPClassUID = ''  # initiated, should be defined by Dicom subclass
-    dcm.ds.SOPInstanceUID = ''
+class SOPCommon(Module):
 
-    # SpecificCharacterSet
-    # Default set to ISO_IR 100 = Latin alphabet No. 1
-    # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.12.html#sect_C.12.1.1.2
-    dcm.ds.SpecificCharacterSet = 'ISO_IR 100'
-    dcm.ds.InstanceCreationDate = ''
-    dcm.ds.InstanceCreationTime = ''
+    def __init__(self):
+        super().__init__()
 
-    dcm.ds.InstanceCreatorUID = ''
+        self.module_type = 'SOPCommon'
+
+        self.ds.SOPClassUID = ''  # initiated, should be defined by Dicom subclass
+        self.ds.SOPInstanceUID = ''
+    
+        # SpecificCharacterSet
+        # Default set to ISO_IR 100 = Latin alphabet No. 1
+        # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.12.html#sect_C.12.1.1.2
+        self.ds.SpecificCharacterSet = 'ISO_IR 100'
+        self.ds.InstanceCreationDate = ''
+        self.ds.InstanceCreationTime = ''
+    
+        self.ds.InstanceCreatorUID = ''

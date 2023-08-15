@@ -6,15 +6,18 @@ https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.7.2.html
 """
 
 
-def add_module(dcm):
-    """
-    Adds Module to Pydicom Dataset object
-    :param dcm: input Pydicom Dataset object
-    :return: updated Pydicom Dataset object
-    """
+from nii2dcm.module import Module
 
-    dcm.ds.StudyInstanceUID = ''  # attribute initialised but value initialised in Dicom class
-    dcm.ds.StudyDescription = ''
-    dcm.ds.ReferringPhysicianName = ''
+
+class GeneralStudy(Module):
+
+    def __init__(self):
+        super().__init__()
+
+        self.module_type = 'GeneralStudy'
+
+        self.ds.StudyInstanceUID = ''  # attribute initialised but value initialised in Dicom class
+        self.ds.StudyDescription = ''
+        self.ds.ReferringPhysicianName = ''
 
 

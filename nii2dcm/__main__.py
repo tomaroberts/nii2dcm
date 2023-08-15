@@ -30,7 +30,6 @@ def cli(args=None):
 
     input_file = Path(args.input_file)  # TODO: add check that file is .nii/.nii.gz
     output_dir = Path(args.output_dir)  # TODO: add check that this is directory
-    ref_dicom_file = Path(args.ref_dicom)   # TODO: add check that file is DICOM
 
     if not input_file.exists():
         print(f"Input file '{input_file}' not found")
@@ -40,15 +39,22 @@ def cli(args=None):
         print(f"Output directory '{output_dir}' does not exist")
         raise SystemExit(1)
 
-    if not ref_dicom_file.exists():
-        print(f"Reference DICOM file '{ref_dicom}' not found.")
-        raise SystemExit(1)
+    # Coding of optional file checks below is quite verbose
+    if args.dicom_type is not None:
+        dicom_type = args.dicom_type  # TODO: add check that supplied dicom_type is permitted
+    elif args.dicom_type is None:
+        dicom_type = None
+
+    if args.ref_dicom is not None:
+        ref_dicom_file = Path(args.ref_dicom)   # TODO: add check that file is DICOM
+    elif args.ref_dicom is None:
+        ref_dicom_file = None
 
     # execute nii2dcm
     run_nii2dcm(
         input_file,
         output_dir,
-        args.dicom_type,
+        dicom_type,
         ref_dicom_file
     )
 

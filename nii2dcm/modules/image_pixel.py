@@ -11,19 +11,32 @@ https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.7.6.3.3.
 """
 
 
-def add_module(dcm):
-    """
-    Adds Module to Pydicom Dataset object
-    :param dcm: input Pydicom Dataset object
-    :return: updated Pydicom Dataset object
-    """
+from nii2dcm.module import Module
 
-    dcm.ds.Rows = ''
-    dcm.ds.Columns = ''
-    dcm.ds.BitsAllocated = ''
-    dcm.ds.BitsStored = ''
-    dcm.ds.HighBit = ''
-    dcm.ds.PixelRepresentation = ''
 
-    # PixelData written in dcm_writer via Pydicom
-    dcm.ds.PixelData = ''
+class ImagePixel(Module):
+
+    def __init__(self):
+        super().__init__()
+
+        self.module_type = 'ImagePixel'
+
+        self.ds.Rows = ''
+        self.ds.Columns = ''
+
+        # BitsAllocated, BitsStored, HighBit
+        # Setting default = 1 for purposes of basic DICOM creation. Should be overwritten by Dicom subclass.
+        self.ds.BitsAllocated = 1
+        self.ds.BitsStored = ''
+        self.ds.HighBit = ''
+    
+        # PixelRepresentation
+        # Enumerated values either: unsigned integer or two's complement
+        # Setting = 0, as observed in real DICOM
+        self.ds.PixelRepresentation = 0
+    
+        self.ds.SmallestImagePixelValue = ''
+        self.ds.LargestImagePixelValue = ''
+    
+        # PixelData written in dcm_writer via Pydicom
+        self.ds.PixelData = ''

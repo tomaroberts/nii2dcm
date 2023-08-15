@@ -80,6 +80,8 @@ class Nifti:
             'NumberOfInstances': nZ*nF,
             'PixelSpacing': [dimX, dimY],
             'FOV': [fovX, fovY, fovZ],
+            'SmallestImagePixelValue': minI,
+            'LargestImagePixelValue': maxI,
             'WindowCenter': str(windowCenter),
             'WindowWidth': str(windowWidth),
             'RescaleIntercept': str(rescaleIntercept),

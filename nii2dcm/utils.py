@@ -5,10 +5,11 @@ Utility functions for nii2dcm
 # TODO(tomaroberts) create DicomDict class/functions which enable user to add custom attributes to nii2dcm Dicom
 #  subclasses. Code below is currently non-functioning, but retained as reminder for future development.
 
+from typing import Dict
 from pydicom.datadict import DicomDictionary, keyword_dict
 
 
-def dcm_dictionary_update(new_dict_items):
+def dcm_dictionary_update(new_dict_items: Dict):
     """
     Update Pydicom DicomDictionary object with non-standard Private tags. Note: these tags are not added to the
     instantiated nii2dcm Dicom object; the DicomDictionary object is just updated meaning that these tags are now
@@ -18,6 +19,9 @@ def dcm_dictionary_update(new_dict_items):
 
     See: https://pydicom.github.io/pydicom/stable/auto_examples/metadata_processing/plot_add_dict_entries.html
     """
+
+    # TODO temporary pass – implement functionality and remove later
+    pass
 
     # Update the dictionary itself
     DicomDictionary.update(new_dict_items)

@@ -1,4 +1,4 @@
-# Workflow to build nii2dcm
+# Workflow to build nii2dcm and test different command line interface (CLI) options
 
 name: Build nii2dcm
 

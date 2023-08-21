@@ -64,4 +64,4 @@ jobs:
         nii2dcm tests/data/DicomMRISVR/t2-svr-atlas-35wk.nii.gz ./output -d SVR
         ls ./output
         # assert DICOM files exist
-        [ -f "./output/IM_0001" ] && echo "Output DICOM file exists" || exit 1
+        [ -f "./output/IM_0001.dcm" ] && echo "Output DICOM file exists" || exit 1

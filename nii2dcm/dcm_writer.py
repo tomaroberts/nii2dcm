@@ -16,7 +16,7 @@ def write_slice(dcm, img_data, instance_index, output_dir):
     output_dir – output DICOM file save location
     """
 
-    output_filename = r'IM_%04d' % (instance_index + 1)  # begin filename from 1, e.g. IM_0001
+    output_filename = r'IM_%04d.dcm' % (instance_index + 1)  # begin filename from 1, e.g. IM_0001.dcm
 
     img_slice = img_data[:, :, instance_index]
 

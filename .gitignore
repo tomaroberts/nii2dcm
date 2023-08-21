@@ -87,3 +87,6 @@ _im*
 # NIfTI filenames
 *.nii
 *.nii.gz
+
+# Permit Test Data
+!tests/data/DicomMRISVR/t2-svr-atlas-35wk.nii.gz

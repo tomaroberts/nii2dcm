@@ -89,7 +89,7 @@ _im*
 *.nii.gz
 
 # Omit _version.py as required by setuptools_scm
-!nii2dcm/_version.py
+nii2dcm/_version.py
 
 # Permit Test Data
 !tests/data/DicomMRISVR/t2-svr-atlas-35wk.nii.gz

@@ -7,4 +7,5 @@ name = "nii2dcm"
 dynamic = ["version"]
 
 [tool.setuptools_scm]
+local_scheme = "no-local-version"  # required for PyPI and TestPyPI
 write_to = "nii2dcm/_version.py"

@@ -56,6 +56,7 @@ jobs:
     - name: Test nii2dcm install
       run: |
         nii2dcm -h
+        nii2dcm -v
 
     - name: Test DicomMRISVR creation
       run: |

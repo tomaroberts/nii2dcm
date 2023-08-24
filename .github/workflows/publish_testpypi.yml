@@ -54,7 +54,6 @@ jobs:
         pip install -e .
         echo "nii2dcm version:"
         nii2dcm -v
-        echo "{NII2DCM_VERSION}={nii2dcm -v}" >> "$GITHUB_OUTPUT"
 
     - name: Publish package to TestPyPI
       uses: pypa/gh-action-pypi-publish@release/v1
@@ -70,9 +69,8 @@ jobs:
           time: '1m'
 
     - name: Install latest TestPyPI version in fresh venv
-      env:
-        NII2DCM_VERSION: ${{ steps.nii2dcm-version.outputs.NII2DCM_VERSION }}
       run: |
+        NII2DCM_VERSION=`echo "$(nii2dcm -v)"`
         deactivate
         python -m venv n2d
         source n2d/bin/activate

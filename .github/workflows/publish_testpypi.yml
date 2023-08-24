@@ -76,4 +76,4 @@ jobs:
         source nii2dcm-temp/bin/activate
         pip install --upgrade pip
         pip install setuptools wheel
-        pip install --index-url https://test.pypi.org/simple/ nii2dcm==$NII2DCM_VERSION
+        pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ nii2dcm==$NII2DCM_VERSION

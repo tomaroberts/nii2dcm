@@ -66,7 +66,7 @@ jobs:
     - name: Wait to allow TestPyPI to update
       uses: GuillaumeFalourd/wait-sleep-action@v1
       with:
-        time: '1m'
+        time: '90'  # seconds
 
     - name: Install latest TestPyPI version in fresh venv
       run: |

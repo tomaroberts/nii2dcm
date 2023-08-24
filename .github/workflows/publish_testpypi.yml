@@ -50,6 +50,7 @@ jobs:
 
     - name: Display nii2dcm version
       run: |
+        pip install -e .
         echo "nii2dcm version:"
         nii2dcm -v
 

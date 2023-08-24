@@ -71,9 +71,8 @@ jobs:
     - name: Install latest TestPyPI version in fresh venv
       run: |
         NII2DCM_VERSION=`echo "$(nii2dcm -v)"`
-        deactivate
-        python -m venv n2d
-        source n2d/bin/activate
+        python -m venv nii2dcm-temp
+        source nii2dcm-temp/bin/activate
         pip install --upgrade pip
         pip install setuptools wheel
         pip install --extra-url-index https://test.pypi.org/simple/ nii2dcm==$NII2DCM_VERSION

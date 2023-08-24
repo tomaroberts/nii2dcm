@@ -49,10 +49,12 @@ jobs:
       run: python -m build --sdist --wheel --outdir dist/
 
     - name: Display nii2dcm version
+      id: nii2dcm-version
       run: |
         pip install -e .
         echo "nii2dcm version:"
         nii2dcm -v
+        echo "{NII2DCM_VERSION}={nii2dcm -v}" >> "$GITHUB_OUTPUT"
 
     - name: Publish package to TestPyPI
       uses: pypa/gh-action-pypi-publish@release/v1
@@ -61,3 +63,19 @@ jobs:
         password: ${{ secrets.TESTPYPI_API_TOKEN }}
         repository-url: https://test.pypi.org/legacy/
         verbose: true
+
+    - name: Wait to allow TestPyPI to update
+      uses: GuillaumeFalourd/wait-sleep-action@v1
+        with:
+          time: '1m'
+
+    - name: Install latest TestPyPI version in fresh venv
+      env:
+        NII2DCM_VERSION: ${{ steps.nii2dcm-version.outputs.NII2DCM_VERSION }}
+      run: |
+        deactivate
+        python -m venv n2d
+        source n2d/bin/activate
+        pip install --upgrade pip
+        pip install setuptools wheel
+        pip install --extra-url-index https://test.pypi.org/simple/ nii2dcm==$NII2DCM_VERSION

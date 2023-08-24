@@ -29,14 +29,14 @@ class ImagePixel(Module):
         self.ds.BitsAllocated = 1
         self.ds.BitsStored = ''
         self.ds.HighBit = ''
-    
+
         # PixelRepresentation
         # Enumerated values either: unsigned integer or two's complement
         # Setting = 0, as observed in real DICOM
         self.ds.PixelRepresentation = 0
-    
+
         self.ds.SmallestImagePixelValue = ''
         self.ds.LargestImagePixelValue = ''
-    
+
         # PixelData written in dcm_writer via Pydicom
         self.ds.PixelData = ''

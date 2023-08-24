@@ -39,7 +39,7 @@ class Nifti:
         sliceIndices = np.repeat(range(1, nZ+1), nF)
         voxelSpacing = dimZ
         zLocLast = (voxelSpacing * nZ) - voxelSpacing
-        sliceLoca = np.repeat( np.linspace(0, zLocLast, num=nZ), nF)
+        sliceLoca = np.repeat(np.linspace(0, zLocLast, num=nZ), nF)
 
         # Windowing & Signal Intensity
         maxI = np.amax(nii_img)

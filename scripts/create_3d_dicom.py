@@ -14,8 +14,8 @@ import nii2dcm.svr
 
 
 NII2DCM_DIR = r'/Users/tr17/code/nii2dcm'
-INPUT_DIR   = r'/Users/tr17/code/nii2dcm/input/'
-OUTPUT_DIR  = r'/Users/tr17/code/nii2dcm/output'
+INPUT_DIR = r'/Users/tr17/code/nii2dcm/input/'
+OUTPUT_DIR = r'/Users/tr17/code/nii2dcm/output'
 
 if not os.path.isdir(OUTPUT_DIR):
     os.makedirs(OUTPUT_DIR)

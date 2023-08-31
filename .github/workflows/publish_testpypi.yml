@@ -71,14 +71,6 @@ jobs:
         python setup.py sdist bdist_wheel
         twine check dist/*
 
-    - name: Remove .egg
-      run: |
-        echo "dist/ before:"
-        ls dist/
-        [ -f "./dist/*.egg" ] && "Deleting .egg file as not permitted on PyPI" || rm ./dist/*.egg
-        echo "dist/ after:"
-        ls dist/
-
     - name: Publish package to TestPyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:

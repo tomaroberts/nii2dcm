@@ -54,16 +54,16 @@ jobs:
         pip install -r requirements.txt
 
     - name: Build package
-      run: python setup.py install  # TODO: fix pip install -e .
+      run: pip install .
 
     - name: Display version via dunamai
       run: |
-        echo "dunamai version:"
+        echo "version via dunamai:"
         dunamai from any
 
     - name: Display version via nii2dcm CLI
       run: |
-        echo "nii2dcm version:"
+        echo "version via nii2dcm CLI:"
         nii2dcm -v
 
     - name: Create dist/

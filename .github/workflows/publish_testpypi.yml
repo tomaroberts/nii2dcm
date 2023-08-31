@@ -63,7 +63,6 @@ jobs:
 
     - name: Display version via nii2dcm CLI
       run: |
-#        pip install -e .
         echo "nii2dcm version:"
         nii2dcm -v
 

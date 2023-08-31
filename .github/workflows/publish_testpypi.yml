@@ -19,7 +19,6 @@ on:
   push:
     branches:
       - main
-      - 24-gha-pypi
 
 permissions:
   contents: read

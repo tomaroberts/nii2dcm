@@ -101,7 +101,7 @@ nii2dcm SVR-output.nii.gz path/to/output/dir/ -d SVR
 <!-- ROADMAP -->
 ## Roadmap
 
-This project is in its infancy! Expect :bug::ant::beetle:
+This project is in its infancy! Expect bugs :bug::ant::beetle:
 
 There are many things I would like to test and implement. 
 [Raise an Issue](https://github.com/tomaroberts/nii2dcm/issues) if you have ideas or suggestions.

@@ -1,9 +1,12 @@
-# Publish to TestPyPI
+# Publish to PyPI
 #
-# This workflow publishes nii2dcm on TestPyPI prior to
-# production release onto PyPI. The workflow is intended to
-# catch any issues arising during the release procedure to
-# prevent unnecessary versioning issues on PyPI.
+# This workflow publishes nii2dcm on PyPI. The workflow triggers
+# on release. The PyPI release is labelled according to the git tag
+# specified in the GitHub Release user interface. For instance,
+# if the TestPyPI release is v0.1.2.post16, then the GitHub Release
+# tag should be entered as v0.1.3, which will propagate to PyPI.
+# Subsequent developer commits will become v0.1.3.post1, v0.1.3.post2,
+# and so on.
 #
 # This workflow will upload a Python Package using Twine when a release is created. For more information see:
 # https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
@@ -13,12 +16,11 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Publish package to TestPyPI
+name: Publish package to PyPI
 
 on:
-  push:
-    branches:
-      - main
+  release:
+    types: [published]
 
 permissions:
   contents: read
@@ -27,10 +29,11 @@ permissions:
 jobs:
   testpypi-publish:
 
+    name: Publish to PyPI
     runs-on: ubuntu-latest
     environment:
-      name: testpypi
-      url: https://test.pypi.org/p/nii2dcm
+      name: pypi
+      url: https://pypi.org/p/nii2dcm
     permissions:
       contents: read
       actions: write
@@ -70,20 +73,19 @@ jobs:
         python setup.py sdist bdist_wheel
         twine check dist/*
 
-    - name: Publish package to TestPyPI
+    - name: Publish package to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
       with:
         user: __token__
-        password: ${{ secrets.TESTPYPI_API_TOKEN }}
-        repository-url: https://test.pypi.org/legacy/
+        password: ${{ secrets.PYPI_API_TOKEN }}
         verbose: true
 
-    - name: Wait to allow TestPyPI to update
+    - name: Wait to allow PyPI to update
       uses: GuillaumeFalourd/wait-sleep-action@v1
       with:
         time: '150'  # seconds
 
-    - name: Install latest TestPyPI version in fresh venv
+    - name: Install latest PyPI version in fresh venv
       run: |
         NII2DCM_VERSION=`echo "$(nii2dcm -v)"`
         echo $NII2DCM_VERSION
@@ -91,7 +93,7 @@ jobs:
         source nii2dcm-temp/bin/activate
         pip install --upgrade pip
         pip install setuptools wheel
-        pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ nii2dcm==$NII2DCM_VERSION
+        pip install nii2dcm==$NII2DCM_VERSION
         nii2dcm -h
         echo "nii2dcm version:"
         nii2dcm -v

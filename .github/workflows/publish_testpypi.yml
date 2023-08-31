@@ -54,7 +54,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Build package
-      run: python setup.py install
+      run: python setup.py install  # TODO: fix pip install -e .
 
     - name: Display version via dunamai
       run: |

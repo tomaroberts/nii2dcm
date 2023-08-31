@@ -62,7 +62,6 @@ jobs:
         dunamai from any
 
     - name: Display version via nii2dcm CLI
-      id: nii2dcm-version
       run: |
 #        pip install -e .
         echo "nii2dcm version:"

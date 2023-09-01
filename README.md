@@ -38,7 +38,7 @@ Researchers often convert DICOM files to NIfTI files using tools such as
 **nii2dcm** is designed to convert a NIfTI file (.nii/.nii.gz) into a single-frame DICOM Series in one line, e.g.:
 
 ```sh
-nii2dcm nifti-file.nii.gz dicom-output-directory --dicom-type MR
+nii2dcm nifti-file.nii.gz dicom-output-directory/ --dicom-type MR
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -66,7 +66,7 @@ git clone https://github.com/tomaroberts/nii2dcm.git
 
 Setup a Python virtual environment (recommended):
 ```sh
-cd nii2dcm
+cd nii2dcm/
 python -m venv nii2dcm-venv
 source nii2dcm-venv/bin/activate
 python -m pip install --upgrade pip
@@ -92,6 +92,7 @@ nii2dcm -h
 ## Usage
 
 nii2dcm is designed to be pointed at a single `.nii` or `.nii.gz` from which it generates a single-frame DICOM dataset. 
+
 It is **recommended** to specify the output DICOM modality using the `-d` or `--dicom-type` flag (see examples below). 
 Without this, a generic DICOM is created without complete imaging modality metadata.
 
@@ -123,7 +124,7 @@ Eventually, nii2dcm will be extended to cover other imaging modalities including
 ## Reference DICOM metadata transferral
 
 There are often situations where it can be useful to transfer information from an existing DICOM Study into a new DICOM 
-Series. For example, if you want to store the results from an image processing task alongside your original DICOM Study.
+Series. For example, if you want to store your new DICOM dataset alongside your original DICOM Study.
 
 The `-r` or `--ref-dicom` flag attempts to transfer common DICOM attributes from a reference DICOM file into the 
 output DICOM:
@@ -145,7 +146,7 @@ This project is in its infancy! Expect bugs :bug: :ant: :beetle:
 There are many things I would like to test and implement. 
 [Raise an Issue](https://github.com/tomaroberts/nii2dcm/issues) if you have ideas or suggestions.
 
-##### Developer Note
+#### Developer Note
 If you would like to create another class of DICOM within nii2dcm, you can use the base 
 [DicomMRI](https://github.com/tomaroberts/nii2dcm/blob/b03b4aacce25eeb6a00756bdb47365034dced787/nii2dcm/dcm.py#L201) 
 class or the [DicomMRISVR](https://github.com/tomaroberts/nii2dcm/blob/main/nii2dcm/svr.py) class for inspiration. You 

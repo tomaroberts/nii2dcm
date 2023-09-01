@@ -168,8 +168,10 @@ on this
 tasks, including DICOM creation
 * [SimpleITK](https://simpleitk.org/) - comprehensive software including DICOM reading and writing
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- Links -->
+
+<!-- LINKS -->
 ## Links
 Some useful, free image viewing software:
 * [ITK-Snap](http://www.itksnap.org/) - fast, simple interface. Opens NIfTI and DICOM

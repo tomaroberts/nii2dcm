@@ -53,6 +53,7 @@ To install and run nii2dcm locally, you have two options:
 
 ### pip
 
+Create a new Python virtual environment, then:
 ```shell
 pip install nii2dcm
 ```

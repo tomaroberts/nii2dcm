@@ -6,8 +6,8 @@ on:
   pull_request:
 
 jobs:
-  build-and-test:
-    name: Build
+  venv-build-and-test:
+    name: venv build
 
     runs-on: ${{ matrix.os }}
 
@@ -65,3 +65,30 @@ jobs:
         ls ./output
         # assert DICOM files exist
         [ -f "./output/IM_0001.dcm" ] && echo "Output DICOM file exists" || exit 1
+
+  container-build-and-test:
+    name: container build
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        python-version: [ '3.9' ]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build container
+        run: |
+          docker build -t nii2dcm --progress=plain --no-cache .
+          docker ps
+
+      - name: Test nii2dcm container
+        run: |
+          docker run nii2dcm -h
+          echo "nii2dcm version:"
+          docker run nii2dcm -v

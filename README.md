@@ -75,7 +75,6 @@ python -m pip install --upgrade pip
 
 Install dependencies and nii2dcm:
 ```sh
-pip install setuptools wheel
 pip install -r requirements.txt
 pip install .
 ```

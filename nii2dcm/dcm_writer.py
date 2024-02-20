@@ -6,19 +6,19 @@ import os
 import pydicom as pyd
 
 
-def write_slice(dcm, img_data, instance_index, output_dir):
+def write_slice(dcm, img_data, slice_index, output_dir):
     """
     write a single DICOM slice
 
     dcm – nii2dcm DICOM object
     img_data - [nX, nY, nSlice] image pixel data, such as from NIfTI file
-    instance_index – instance index (important: counts from 0)
+    slice_index – slice index in nibabel img_data array (important: counts from 0, whereas DICOM instances count from 1)
     output_dir – output DICOM file save location
     """
 
-    output_filename = r'IM_%04d.dcm' % (instance_index + 1)  # begin filename from 1, e.g. IM_0001.dcm
+    output_filename = r'IM_%04d.dcm' % (slice_index + 1)  # begin filename from 1, e.g. IM_0001.dcm
 
-    img_slice = img_data[:, :, instance_index]
+    img_slice = img_data[:, :, slice_index]
 
     # Instance UID – unique to current slice
     dcm.ds.SOPInstanceUID = pyd.uid.generate_uid(None)

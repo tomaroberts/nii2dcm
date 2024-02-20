@@ -65,7 +65,7 @@ class TestDicom:
         assert os.path.exists(self.dicom.filename)
         os.remove(self.dicom.filename)
         if os.path.exists(self.dicom.filename):
-            raise Exception("Failed to delete temporary DICOM during pytest process.")
+            raise Exception("Failed to delete temporary DICOM created during pytest process.")
 
     def test_init_study_tags(self):
         self.dicom.init_study_tags()

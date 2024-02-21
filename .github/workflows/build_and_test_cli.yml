@@ -75,7 +75,8 @@ jobs:
         pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=nii2dcm tests/ | tee pytest-coverage.txt ; echo $?
 
     - name: Pytest coverage comment
-      uses: MishaKav/pytest-coverage-comment@main
+      id: coverageComment
+      uses: MishaKav/pytest-coverage-comment@unit-tests
       with:
         pytest-coverage-path: ./pytest-coverage.txt
         junitxml-path: ./pytest.xml

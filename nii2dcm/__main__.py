@@ -24,7 +24,7 @@ def cli(args=None):
     parser.add_argument("input_file", type=str, help="[.nii/.nii.gz] input NIfTI file")
     parser.add_argument("output_dir", type=str, help="[directory] output DICOM path")
     parser.add_argument(
-        "-d","--dicom_type",
+        "-d", "--dicom_type",
         type=str,
         help="[string] type of DICOM. Available types: MR, SVR."
     )

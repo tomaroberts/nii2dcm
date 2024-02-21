@@ -1,4 +1,4 @@
-# Workflow to build nii2dcm and test different command line interface (CLI) options
+# Workflow to build nii2dcm, run unit tests and then execute command line interface (CLI) end-to-end
 
 name: Build nii2dcm
 
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build
+    name: Build, Unit Tests & E2E
 
     runs-on: ${{ matrix.os }}
 
@@ -56,6 +56,10 @@ jobs:
       run: |
         nii2dcm -h
         nii2dcm -v
+
+    - name: Run unit tests
+      run: |
+        pytest tests/
 
     - name: Test DicomMRISVR creation
       run: |

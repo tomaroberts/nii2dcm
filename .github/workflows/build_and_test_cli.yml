@@ -80,6 +80,7 @@ jobs:
       with:
         pytest-coverage-path: ./pytest-coverage.txt
         junitxml-path: ./pytest.xml
+        default-branch: unit-tests
 
     - name: Update Coverage Badge
       uses: schneegans/dynamic-badges-action@v1.7.0

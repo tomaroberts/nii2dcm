@@ -142,6 +142,26 @@ Currently, attributes to transfer are [listed here in the DicomMRI class](https:
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+<!-- Docker -->
+## Docker
+nii2dcm is also available as a Docker container. 
+
+Pull the latest container with:
+```shell
+docker pull ghcr.io/tomaroberts/nii2dcm/nii2dcm:latest
+```
+
+Run the containerised nii2dcm:
+```shell
+# display nii2dcm version
+docker run nii2dcm -v
+
+# perform nii2dcm conversion
+docker run nii2dcm nifti-file.nii.gz dicom-output-directory/ -d MR
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- ROADMAP -->
 ## Roadmap
 

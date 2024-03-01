@@ -1,6 +1,8 @@
 # Use the official Python image as the base image
 FROM python:3.9-slim
 
+LABEL org.opencontainers.image.source https://github.com/tomaroberts/nii2dcm
+
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     bash \

@@ -6,8 +6,8 @@ on:
   pull_request:
 
 jobs:
-  build-and-test:
-    name: Build, Unit Tests & E2E
+  venv-build-and-test:
+    name: venv Build, Unit Tests & E2E
 
     runs-on: ${{ matrix.os }}
 

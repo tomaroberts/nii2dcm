@@ -148,7 +148,12 @@ nii2dcm is also available as a Docker container.
 
 Pull the latest container with:
 ```shell
-docker pull ghcr.io/tomaroberts/nii2dcm/nii2dcm:latest
+docker pull ghcr.io/tomaroberts/nii2dcm:latest
+```
+
+For ease of use, rename the container on your local machine:
+```shell
+docker tag ghcr.io/tomaroberts/nii2dcm:latest nii2dcm
 ```
 
 Run the containerised nii2dcm:

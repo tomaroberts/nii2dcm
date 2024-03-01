@@ -1,6 +1,7 @@
 # Publish container to GHCR
 #
 # This workflow builds a nii2dcm container and publishes to GHCR
+#
 
 name: Create and publish container on GHCR
 on:

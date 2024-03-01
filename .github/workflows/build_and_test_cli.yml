@@ -1,13 +1,13 @@
 # Workflow to build nii2dcm, run unit tests and then execute command line interface (CLI) end-to-end
 
-name: Build nii2dcm
+name: Build & Test nii2dcm
 
 on:
   pull_request:
 
 jobs:
   venv-build-and-test:
-    name: venv Build, Unit Tests & E2E
+    name: venv + E2E
 
     runs-on: ${{ matrix.os }}
 
@@ -94,7 +94,7 @@ jobs:
         namedLogo: python
 
   container-build-and-test:
-    name: Container Build & Test
+    name: Container
 
     runs-on: ${{ matrix.os }}
 

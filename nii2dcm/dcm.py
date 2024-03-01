@@ -11,7 +11,6 @@ from random import randint
 import pydicom as pyd
 from pydicom.dataset import FileDataset, FileMetaDataset
 
-from nii2dcm.utils import dcm_dictionary_update
 from nii2dcm.modules.patient import Patient
 from nii2dcm.modules.general_study import GeneralStudy
 from nii2dcm.modules.patient_study import PatientStudy
@@ -67,7 +66,7 @@ class Dicom:
 
         """
         Set Dicom Date/Time
-        Important: doing this once sets all Instances/Series/Study creation dates and times to the same values. Whereas, 
+        Important: doing this once sets all Instances/Series/Study creation dates and times to the same values. Whereas,
         doing this within the Modules would every so slightly offset the times
         """
         # TODO shift to utils.py and propagate to Modules, or, create method within this Dicom class

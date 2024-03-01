@@ -20,6 +20,10 @@
     ·
     <a href="https://github.com/tomaroberts/nii2dcm/issues">Request Feature</a>
   </p>
+  <p align="center">
+    <img src="https://github.com/tomaroberts/nii2dcm/actions/workflows/build_and_test_cli.yml/badge.svg?branch=unit-tests">
+    <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/tomaroberts/57ef8057d04f67dbe6e64df410b83079/raw/nii2dcm-pytest-coverage-comment.json"> 
+</p>
 </div>
 
 

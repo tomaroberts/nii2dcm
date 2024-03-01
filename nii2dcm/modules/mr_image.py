@@ -24,9 +24,9 @@ class MRImage(Module):
         # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.8.3.html#sect_C.8.3.1.1.1
         # For now, will omit thereby inheriting parent value
         # self.ds.ImageType = ''
-    
+
         self.ds.SamplesPerPixel = 1
-    
+
         # PhotometricInterpretation
         # TODO: decide MONOCHROME1 or MONOCHROME2 as default
         # https://dicom.nema.org/medical/Dicom/current/output/chtml/part03/sect_C.7.6.3.html#sect_C.7.6.3.1.2

@@ -1,13 +1,13 @@
 # Workflow to build nii2dcm, run unit tests and then execute command line interface (CLI) end-to-end
 
-name: Build nii2dcm
+name: Build & Test nii2dcm
 
 on:
   pull_request:
 
 jobs:
-  build-and-test:
-    name: Build, Unit Tests & E2E
+  venv-build-and-test:
+    name: venv + E2E
 
     runs-on: ${{ matrix.os }}
 
@@ -91,3 +91,30 @@ jobs:
         message: ${{ steps.coverageComment.outputs.coverage }}
         color: ${{ steps.coverageComment.outputs.color }}
         namedLogo: python
+
+  container-build-and-test:
+    name: Container
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        python-version: [ '3.9' ]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build container
+        run: |
+          docker build -t nii2dcm --progress=plain --no-cache .
+          docker ps
+
+      - name: Test nii2dcm container
+        run: |
+          docker run nii2dcm -h
+          echo "nii2dcm version:"
+          docker run nii2dcm -v

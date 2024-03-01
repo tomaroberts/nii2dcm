@@ -20,6 +20,10 @@
     ·
     <a href="https://github.com/tomaroberts/nii2dcm/issues">Request Feature</a>
   </p>
+  <p align="center">
+    <img src="https://github.com/tomaroberts/nii2dcm/actions/workflows/build_and_test_cli.yml/badge.svg?branch=unit-tests">
+    <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/tomaroberts/57ef8057d04f67dbe6e64df410b83079/raw/nii2dcm-pytest-coverage-comment.json"> 
+</p>
 </div>
 
 
@@ -53,6 +57,7 @@ To install and run nii2dcm locally, you have two options:
 
 ### pip
 
+Create a new Python virtual environment, then:
 ```shell
 pip install nii2dcm
 ```
@@ -74,7 +79,6 @@ python -m pip install --upgrade pip
 
 Install dependencies and nii2dcm:
 ```sh
-pip install setuptools wheel
 pip install -r requirements.txt
 pip install .
 ```
@@ -137,6 +141,26 @@ Currently, attributes to transfer are [listed here in the DicomMRI class](https:
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+
+<!-- Docker -->
+## Docker
+nii2dcm is also available as a Docker container. 
+
+Pull the latest container with:
+```shell
+docker pull ghcr.io/tomaroberts/nii2dcm/nii2dcm:latest
+```
+
+Run the containerised nii2dcm:
+```shell
+# display nii2dcm version
+docker run nii2dcm -v
+
+# perform nii2dcm conversion
+docker run nii2dcm nifti-file.nii.gz dicom-output-directory/ -d MR
+```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
 ## Roadmap

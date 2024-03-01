@@ -1,13 +1,13 @@
-# Workflow to build nii2dcm and test different command line interface (CLI) options
+# Workflow to build nii2dcm, run unit tests and then execute command line interface (CLI) end-to-end
 
-name: Build nii2dcm
+name: Build & Test nii2dcm
 
 on:
   pull_request:
 
 jobs:
-  build-and-test:
-    name: Build
+  venv-build-and-test:
+    name: venv + E2E
 
     runs-on: ${{ matrix.os }}
 
@@ -57,6 +57,10 @@ jobs:
         nii2dcm -h
         nii2dcm -v
 
+    - name: Run unit tests
+      run: |
+        pytest tests/
+
     - name: Test DicomMRISVR creation
       run: |
         # run nii2dcm
@@ -65,3 +69,52 @@ jobs:
         ls ./output
         # assert DICOM files exist
         [ -f "./output/IM_0001.dcm" ] && echo "Output DICOM file exists" || exit 1
+
+    - name: Build pytest coverage file
+      run: |
+        pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=nii2dcm tests/ | tee pytest-coverage.txt ; echo $?
+
+    - name: Pytest coverage comment
+      id: coverageComment
+      uses: MishaKav/pytest-coverage-comment@main
+      with:
+        pytest-coverage-path: ./pytest-coverage.txt
+        junitxml-path: ./pytest.xml
+
+    - name: Update Coverage Badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      with:
+        auth: ${{ secrets.PYTEST_COVERAGE_COMMENT }}
+        gistID: 57ef8057d04f67dbe6e64df410b83079
+        filename: nii2dcm-pytest-coverage-comment.json
+        label: Coverage Report
+        message: ${{ steps.coverageComment.outputs.coverage }}
+        color: ${{ steps.coverageComment.outputs.color }}
+        namedLogo: python
+
+  container-build-and-test:
+    name: Container
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest ]
+        python-version: [ '3.9' ]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Build container
+        run: |
+          docker build -t nii2dcm --progress=plain --no-cache .
+          docker ps
+
+      - name: Test nii2dcm container
+        run: |
+          docker run nii2dcm -h
+          echo "nii2dcm version:"
+          docker run nii2dcm -v

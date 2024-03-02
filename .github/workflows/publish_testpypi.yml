@@ -30,9 +30,6 @@ jobs:
   testpypi-publish:
 
     runs-on: ubuntu-latest
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/nii2dcm
     permissions:
       contents: read
       actions: write

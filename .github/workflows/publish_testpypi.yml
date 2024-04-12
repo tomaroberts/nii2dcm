@@ -12,13 +12,12 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
+#
 
 name: Publish package to TestPyPI
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
 
 permissions:
   contents: read
@@ -28,9 +27,6 @@ jobs:
   testpypi-publish:
 
     runs-on: ubuntu-latest
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/nii2dcm
     permissions:
       contents: read
       actions: write
@@ -67,7 +63,7 @@ jobs:
 
     - name: Create dist/
       run: |
-        python setup.py sdist bdist_wheel
+        python setup.py bdist_wheel
         twine check dist/*
 
     - name: Publish package to TestPyPI
@@ -84,6 +80,28 @@ jobs:
         time: '150'  # seconds
 
     - name: Install latest TestPyPI version in fresh venv
+      id: attempt1
+      run: |
+        NII2DCM_VERSION=`echo "$(nii2dcm -v)"`
+        echo $NII2DCM_VERSION
+        python -m venv nii2dcm-temp
+        source nii2dcm-temp/bin/activate
+        pip install --upgrade pip
+        pip install setuptools wheel
+        pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ nii2dcm==$NII2DCM_VERSION
+        nii2dcm -h
+        echo "nii2dcm version:"
+        nii2dcm -v
+      continue-on-error: true
+
+    - name: Wait longer
+      if: steps.attempt1.outcome != 'success'
+      uses: GuillaumeFalourd/wait-sleep-action@v1
+      with:
+        time: '150'  # seconds
+
+    - name: Re-attempt TestPyPI install
+      if: steps.attempt1.outcome != 'success'
       run: |
         NII2DCM_VERSION=`echo "$(nii2dcm -v)"`
         echo $NII2DCM_VERSION

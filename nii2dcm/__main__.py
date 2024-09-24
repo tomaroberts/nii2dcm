@@ -7,7 +7,7 @@ import argparse
 import os
 from pathlib import Path
 from nii2dcm.run import run_nii2dcm
-from nii2dcm._version import __version__
+from nii2dcm.version import VERSION
 
 
 def cli(args=None):
@@ -43,7 +43,7 @@ def cli(args=None):
         type=str,
         help="[.dcm] Reference DICOM file for Attribute transfer",
     )
-    parser.add_argument("-v", "--version", action="version", version=__version__)
+    parser.add_argument("-v", "--version", action="version", version=VERSION)
 
     args = parser.parse_args()
     output_dir = Path(args.output_dir)  # TODO: add check that this is directory

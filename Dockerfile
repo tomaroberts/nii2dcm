@@ -1,29 +1,18 @@
 # Use the official Python image as the base image
-FROM python:3.9-slim
+FROM scilus/scilus:1.6.0
 
-LABEL org.opencontainers.image.source https://github.com/tomaroberts/nii2dcm
+# Set the working directory in the container
+WORKDIR /
 
-# Setup
-COPY . /home/nii2dcm
-WORKDIR /home/nii2dcm
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    bash git \
-    && apt-get clean
-
-# Update base packages
-RUN pip install --upgrade pip && \
-    pip install setuptools wheel
+# Clone nii2dcm repository
+RUN git clone https://github.com/Onset-lab/nii2dcm.git
+WORKDIR /nii2dcm
 
 # Install nii2dcm requirements
 RUN pip install -r requirements.txt
 
 # Build package from source
-RUN pip install .
+RUN pip install -e .
 
-# Test nii2dcm install
-# To see output locally during build process: docker build -t nii2dcm --progress=plain .
+# Test nii2dcm installation
 RUN nii2dcm -h
-
-ENTRYPOINT ["nii2dcm"]

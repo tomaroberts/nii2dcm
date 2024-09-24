@@ -6,7 +6,7 @@ import os
 import pydicom as pyd
 
 
-def write_slice(dcm, img_data, slice_index, output_dir):
+def write_slice(dcm, img_data, slice_index, output_dir, offset=0):
     """
     write a single DICOM slice
 
@@ -16,7 +16,9 @@ def write_slice(dcm, img_data, slice_index, output_dir):
     output_dir – output DICOM file save location
     """
 
-    output_filename = r'IM_%04d.dcm' % (slice_index + 1)  # begin filename from 1, e.g. IM_0001.dcm
+    output_filename = r"IM_%04d.dcm" % (
+        slice_index + 1 + offset
+    )  # begin filename from 1, e.g. IM_0001.dcm
 
     img_slice = img_data[:, :, slice_index]
 
@@ -30,7 +32,9 @@ def write_slice(dcm, img_data, slice_index, output_dir):
     dcm.ds.save_as(os.path.join(output_dir, output_filename), write_like_original=False)
 
 
-def transfer_nii_hdr_series_tags(dcm, nii2dcm_parameters):
+def transfer_nii_hdr_series_tags(
+    dcm, nii2dcm_parameters, SeriesDescription=None, StudyDescription=None
+):
     """
     Transfer NIfTI header parameters applicable across Series
 
@@ -38,20 +42,30 @@ def transfer_nii_hdr_series_tags(dcm, nii2dcm_parameters):
     nii2dcm_parameters - parameters from NIfTI file
     """
 
-    dcm.ds.Rows = nii2dcm_parameters['Rows']
-    dcm.ds.Columns = nii2dcm_parameters['Columns']
-    dcm.ds.PixelSpacing = [round(float(nii2dcm_parameters['dimX']), 2), round(float(nii2dcm_parameters['dimY']), 2)]
-    dcm.ds.SliceThickness = nii2dcm_parameters['SliceThickness']
-    dcm.ds.SpacingBetweenSlices = round(float(nii2dcm_parameters['SpacingBetweenSlices']), 2)
-    dcm.ds.ImageOrientationPatient = nii2dcm_parameters['ImageOrientationPatient']
-    dcm.ds.AcquisitionMatrix = nii2dcm_parameters['AcquisitionMatrix']
-    dcm.ds.SmallestImagePixelValue = int(nii2dcm_parameters['SmallestImagePixelValue']) \
-        if int(nii2dcm_parameters['SmallestImagePixelValue']) > 0 else 0  # SmallestImagePixelValue must be >= 0
-    dcm.ds.LargestImagePixelValue = int(nii2dcm_parameters['LargestImagePixelValue'])
-    dcm.ds.WindowCenter = nii2dcm_parameters['WindowCenter']
-    dcm.ds.WindowWidth = nii2dcm_parameters['WindowWidth']
-    dcm.ds.RescaleIntercept = nii2dcm_parameters['RescaleIntercept']
-    dcm.ds.RescaleSlope = nii2dcm_parameters['RescaleSlope']
+    dcm.ds.Rows = nii2dcm_parameters["Rows"]
+    dcm.ds.Columns = nii2dcm_parameters["Columns"]
+    dcm.ds.PixelSpacing = [
+        round(float(nii2dcm_parameters["dimX"]), 2),
+        round(float(nii2dcm_parameters["dimY"]), 2),
+    ]
+    dcm.ds.SliceThickness = nii2dcm_parameters["SliceThickness"]
+    dcm.ds.SpacingBetweenSlices = round(
+        float(nii2dcm_parameters["SpacingBetweenSlices"]), 2
+    )
+    dcm.ds.ImageOrientationPatient = nii2dcm_parameters["ImageOrientationPatient"]
+    dcm.ds.AcquisitionMatrix = nii2dcm_parameters["AcquisitionMatrix"]
+    dcm.ds.SmallestImagePixelValue = (
+        int(nii2dcm_parameters["SmallestImagePixelValue"])
+        if int(nii2dcm_parameters["SmallestImagePixelValue"]) > 0
+        else 0
+    )  # SmallestImagePixelValue must be >= 0
+    dcm.ds.LargestImagePixelValue = int(nii2dcm_parameters["LargestImagePixelValue"])
+    dcm.ds.WindowCenter = nii2dcm_parameters["WindowCenter"]
+    dcm.ds.WindowWidth = nii2dcm_parameters["WindowWidth"]
+    dcm.ds.RescaleIntercept = nii2dcm_parameters["RescaleIntercept"]
+    dcm.ds.RescaleSlope = nii2dcm_parameters["RescaleSlope"]
+    dcm.ds.SeriesDescription = SeriesDescription if SeriesDescription else ""
+    dcm.ds.StudyDescription = StudyDescription if StudyDescription else ""
 
 
 def transfer_nii_hdr_instance_tags(dcm, nii2dcm_parameters, instance_index):
@@ -69,12 +83,12 @@ def transfer_nii_hdr_instance_tags(dcm, nii2dcm_parameters, instance_index):
     # SliceLocation
     # ImagePositionPatient
 
-    dcm.ds.InstanceNumber = nii2dcm_parameters['InstanceNumber'][instance_index]
-    dcm.ds.SliceLocation = nii2dcm_parameters['SliceLocation'][instance_index]
+    dcm.ds.InstanceNumber = nii2dcm_parameters["InstanceNumber"][instance_index]
+    dcm.ds.SliceLocation = nii2dcm_parameters["SliceLocation"][instance_index]
     dcm.ds.ImagePositionPatient = [
-        str(nii2dcm_parameters['ImagePositionPatient'][instance_index][0]),
-        str(nii2dcm_parameters['ImagePositionPatient'][instance_index][1]),
-        str(nii2dcm_parameters['ImagePositionPatient'][instance_index][2]),
+        str(nii2dcm_parameters["ImagePositionPatient"][instance_index][0]),
+        str(nii2dcm_parameters["ImagePositionPatient"][instance_index][1]),
+        str(nii2dcm_parameters["ImagePositionPatient"][instance_index][2]),
     ]
 
 
@@ -92,4 +106,4 @@ def transfer_ref_dicom_series_tags(dcm, ref_dcm):
             setattr(dcm.ds, current_attribute, attribute_value)
         except AttributeError as e:
             # TODO once logger implemented, replace print statement with log warning
-            print(f'Warning: ref_dicom {e} therefore could not transfer')
+            print(f"Warning: ref_dicom {e} therefore could not transfer")

@@ -1,6 +1,7 @@
 """
 nii2dcm runner
 """
+
 from os.path import abspath
 
 import nibabel as nib
@@ -12,11 +13,18 @@ from nii2dcm.dcm_writer import (
     transfer_nii_hdr_series_tags,
     transfer_nii_hdr_instance_tags,
     transfer_ref_dicom_series_tags,
-    write_slice
+    write_slice,
 )
 
 
-def run_nii2dcm(input_nii_path, output_dcm_path, dicom_type=None, ref_dicom_file=None):
+def run_nii2dcm(
+    input_nii_path,
+    output_dcm_path,
+    dicom_type=None,
+    ref_dicom_file=None,
+    study_description=None,
+    series_description=None,
+):
     """
     Execute NIfTI to DICOM conversion
 
@@ -27,56 +35,63 @@ def run_nii2dcm(input_nii_path, output_dcm_path, dicom_type=None, ref_dicom_file
     """
 
     # load NIfTI
-    nii = nib.load(input_nii_path)
+    counter = 0
+    study_uid = pyd.uid.generate_uid(None)
+    for input, desc in zip(input_nii_path, series_description):
+        nii = nib.load(input)
 
-    # get pixel data from NIfTI
-    # TODO: create method in nii class
-    nii_img = nii.get_fdata()
-    nii_img = nii_img.astype("uint16")  # match DICOM datatype
-
-    # get NIfTI parameters
-    nii2dcm_parameters = nii2dcm.nii.Nifti.get_nii2dcm_parameters(nii)
-
-    # initialise nii2dcm.dcm object
-    # --dicom_type specified on command line
-    if dicom_type is None:
-        dicom = nii2dcm.dcm.Dicom('nii2dcm_dicom.dcm')
-
-    if dicom_type is not None and dicom_type.upper() in ['MR', 'MRI']:
-        dicom = nii2dcm.dcm.DicomMRI('nii2dcm_dicom_mri.dcm')
-
-    if dicom_type is not None and dicom_type.upper() in ['SVR']:
-        dicom = nii2dcm.svr.DicomMRISVR('nii2dcm_dicom_mri_svr.dcm')
+        # get pixel data from NIfTI
+        # TODO: create method in nii class
         nii_img = nii.get_fdata()
-        nii_img[nii_img < 0] = 0  # set background pixels = 0 (negative in SVRTK)
-        nii_img = nii_img.astype("uint16")
+        nii_img = nii_img.astype("uint16")  # match DICOM datatype
 
-    # load reference DICOM object
-    # --ref_dicom_file specified on command line
-    if ref_dicom_file is not None:
-        ref_dicom = pyd.dcmread(ref_dicom_file)
+        # get NIfTI parameters
+        nii2dcm_parameters = nii2dcm.nii.Nifti.get_nii2dcm_parameters(nii)
 
-    # transfer Series tags from NIfTI
-    transfer_nii_hdr_series_tags(dicom, nii2dcm_parameters)
+        # initialise nii2dcm.dcm object
+        # --dicom_type specified on command line
+        if dicom_type is None:
+            dicom = nii2dcm.dcm.Dicom("nii2dcm_dicom.dcm")
 
-    # transfer tags from reference DICOM
-    # IMPORTANT: this deliberately happens last in the DICOM tag manipulation process so that any tag values transferred
-    # from the reference DICOM override any values initialised by nii2dcm
-    if ref_dicom_file is not None:
-        transfer_ref_dicom_series_tags(dicom, ref_dicom)
+        if dicom_type is not None and dicom_type.upper() in ["MR", "MRI"]:
+            dicom = nii2dcm.dcm.DicomMRI("nii2dcm_dicom_mri.dcm")
 
-    """
-    Write DICOM files
-    - Transfer NIfTI parameters and write slices, instance-by-instance
-    """
-    print('nii2dcm: writing DICOM files ...')  # TODO use logger
+        if dicom_type is not None and dicom_type.upper() in ["SVR"]:
+            dicom = nii2dcm.svr.DicomMRISVR("nii2dcm_dicom_mri_svr.dcm")
+            nii_img = nii.get_fdata()
+            nii_img[nii_img < 0] = 0  # set background pixels = 0 (negative in SVRTK)
+            nii_img = nii_img.astype("uint16")
 
-    for instance_index in range(0, nii2dcm_parameters['NumberOfInstances']):
+        dicom.ds.StudyInstanceUID = study_uid
+        # load reference DICOM object
+        # --ref_dicom_file specified on command line
+        if ref_dicom_file is not None:
+            ref_dicom = pyd.dcmread(ref_dicom_file)
 
-        # Transfer Instance tags
-        transfer_nii_hdr_instance_tags(dicom, nii2dcm_parameters, instance_index)
+        # transfer Series tags from NIfTI
+        transfer_nii_hdr_series_tags(dicom, nii2dcm_parameters, desc, study_description)
 
-        # Write slice
-        write_slice(dicom, nii_img, instance_index, output_dcm_path)
+        # transfer tags from reference DICOM
+        # IMPORTANT: this deliberately happens last in the DICOM tag manipulation process so that any tag values transferred
+        # from the reference DICOM override any values initialised by nii2dcm
+        if ref_dicom_file is not None:
+            transfer_ref_dicom_series_tags(dicom, ref_dicom)
 
-    print(f'nii2dcm: DICOM files written to: {abspath(output_dcm_path)}')  # TODO use logger
+        """
+        Write DICOM files
+        - Transfer NIfTI parameters and write slices, instance-by-instance
+        """
+        print("nii2dcm: writing DICOM files ...")  # TODO use logger
+
+        for instance_index in range(0, nii2dcm_parameters["NumberOfInstances"]):
+
+            # Transfer Instance tags
+            transfer_nii_hdr_instance_tags(dicom, nii2dcm_parameters, instance_index)
+
+            # Write slice
+            write_slice(dicom, nii_img, instance_index, output_dcm_path, offset=counter)
+
+        counter += nii2dcm_parameters["NumberOfInstances"]
+        print(
+            f"nii2dcm: DICOM files written to: {counter}{abspath(output_dcm_path)}"
+        )  # TODO use logger

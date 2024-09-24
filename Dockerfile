@@ -1,18 +1,17 @@
 # Use the official Python image as the base image
 FROM scilus/scilus:1.6.0
 
-# Set the working directory in the container
+LABEL maintainer="Onset-Lab"
+
+ENV NII2DCM_REVISION=${NII2DCM_REVISION:-main}
+
 WORKDIR /
+RUN apt-get update && apt-get -y install git
 
-# Clone nii2dcm repository
-RUN git clone https://github.com/Onset-lab/nii2dcm.git
-WORKDIR /nii2dcm
-
-# Install nii2dcm requirements
-RUN pip install -r requirements.txt
-
-# Build package from source
-RUN pip install -e .
+# Install nii2dcm
+RUN pip install git+https://github.com/onset-lab/nii2dcm.git@${NII2DCM_REVISION} && \
+    apt-get -y remove git && \
+    apt-get -y autoremove
 
 # Test nii2dcm installation
 RUN nii2dcm -h

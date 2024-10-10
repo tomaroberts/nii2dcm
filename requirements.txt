@@ -1,5 +1,5 @@
 setuptools==70.1.*
 wheel==0.43.*
-numpy==1.25.*
-nibabel==4.0.*
+numpy==1.23.*
+nibabel==5.0.*
 pydicom==2.3.0

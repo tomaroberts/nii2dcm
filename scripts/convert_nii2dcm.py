@@ -10,7 +10,7 @@ from nii2dcm.run import run_nii2dcm
 from nii2dcm.version import VERSION
 
 
-def cli(args=None):
+def main(args=None):
     """
     Run nii2dcm via command line
     """
@@ -91,4 +91,4 @@ def cli(args=None):
 
 
 if __name__ == "__main__":
-    sys.exit(cli())
+    main()

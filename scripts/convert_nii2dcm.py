@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 nii2dcm entrypoint code and command line interface (CLI)
 """

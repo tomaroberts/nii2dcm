@@ -9,9 +9,10 @@ WORKDIR /
 RUN apt-get update && apt-get -y install git
 
 # Install nii2dcm
-RUN pip install git+https://github.com/onset-lab/nii2dcm.git@${NII2DCM_REVISION} && \
+RUN python3 -m pip install --upgrade pip && \
+    pip install git+https://github.com/onset-lab/nii2dcm.git@${NII2DCM_REVISION} && \
     apt-get -y remove git && \
     apt-get -y autoremove
 
 # Test nii2dcm installation
-RUN nii2dcm -h
+RUN convert_nii2dcm.py -h

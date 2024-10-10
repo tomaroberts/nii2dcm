@@ -51,9 +51,4 @@ MAJOR = _version_major
 MINOR = _version_minor
 MICRO = _version_micro
 VERSION = __version__
-REQUIRES = [
-    "numpy (>=1.23,<1.24)",
-    "nibabel (>=5.0,<5.3)",
-    "pydicom (>=2.3,<2.4)",
-]
 SCRIPTS = glob.glob("scripts/*.py")

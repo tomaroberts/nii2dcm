@@ -2,7 +2,6 @@
 nii2dcm entrypoint code and command line interface (CLI)
 """
 
-import sys
 import argparse
 import os
 from pathlib import Path
@@ -14,8 +13,6 @@ def main(args=None):
     """
     Run nii2dcm via command line
     """
-    if args is None:
-        args = sys.argv[1:]
 
     parser = argparse.ArgumentParser(
         prog="nii2dcm", description="nii2dcm - NIfTI file to DICOM conversion"

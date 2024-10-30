@@ -36,7 +36,7 @@ jobs:
 
     - name: Install nii2dcm
       run: |
-        pip install .
+        pip install -e .
 
     - name: Test nii2dcm install
       run: |

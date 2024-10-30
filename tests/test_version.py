@@ -1,7 +1,7 @@
 import pytest
 from packaging import version
 
-from nii2dcm._version import __version__
+from nii2dcm.version import __version__
 
 
 class TestVersion:

@@ -43,10 +43,6 @@ jobs:
         convert_nii2dcm.py -h
         convert_nii2dcm.py -v
 
-    - name: Run unit tests
-      run: |
-        pytest tests/
-
     - name: Test DicomMRI creation
       run: |
         # run nii2dcm

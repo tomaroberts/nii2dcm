@@ -75,6 +75,6 @@ jobs:
 
       - name: Test nii2dcm container
         run: |
-          docker run nii2dcm -h
+          docker run convert_nii2dcm.py -h
           echo "nii2dcm version:"
-          docker run nii2dcm -v
+          docker run convert_nii2dcm.py -v

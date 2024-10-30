@@ -12,5 +12,3 @@ RUN apt-get update && apt-get -y install git
 RUN python3 -m pip install --upgrade pip && \
     pip install git+https://github.com/onset-lab/nii2dcm.git
 
-# Set the entrypoint
-ENTRYPOINT [ "convert_nii2dcm.py" ]

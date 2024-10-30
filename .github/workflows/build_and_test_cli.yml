@@ -40,8 +40,8 @@ jobs:
 
     - name: Test nii2dcm install
       run: |
-        convert_nii2dcm -h
-        convert_nii2dcm -v
+        convert_nii2dcm.py -h
+        convert_nii2dcm.py -v
 
     - name: Run unit tests
       run: |
@@ -51,7 +51,7 @@ jobs:
       run: |
         # run nii2dcm
         mkdir output
-        nii2dcm tests/data/DicomMRISVR/t2-svr-atlas-35wk.nii.gz ./output -d MR
+        convert_nii2dcm.py tests/data/DicomMRISVR/t2-svr-atlas-35wk.nii.gz ./output -d MR
         ls ./output
         # assert DICOM files exist
         [ -f "./output/IM_0001.dcm" ] && echo "Output DICOM file exists" || exit 1

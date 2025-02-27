@@ -36,6 +36,7 @@ def main(args=None):
     parser.add_argument(
         "--series_description", nargs="+", type=str, help="[string] Series Description"
     )
+    parser.add_argument("--protocol_name", type=str, help="[string] Protocol Name")
     parser.add_argument(
         "-r",
         "--ref_dicom",
@@ -86,6 +87,7 @@ def main(args=None):
         ref_dicom_file,
         study_description=args.study_description,
         series_description=args.series_description,
+        protocol_name=args.protocol_name,
     )
 
 

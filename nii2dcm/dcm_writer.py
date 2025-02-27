@@ -32,9 +32,7 @@ def write_slice(dcm, img_data, slice_index, output_dir, offset=0):
     dcm.ds.save_as(os.path.join(output_dir, output_filename), write_like_original=False)
 
 
-def transfer_nii_hdr_series_tags(
-    dcm, nii2dcm_parameters, SeriesDescription=None, StudyDescription=None
-):
+def transfer_nii_hdr_series_tags(dcm, nii2dcm_parameters):
     """
     Transfer NIfTI header parameters applicable across Series
 
@@ -64,11 +62,13 @@ def transfer_nii_hdr_series_tags(
     dcm.ds.WindowWidth = nii2dcm_parameters["WindowWidth"]
     dcm.ds.RescaleIntercept = nii2dcm_parameters["RescaleIntercept"]
     dcm.ds.RescaleSlope = nii2dcm_parameters["RescaleSlope"]
-    dcm.ds.SeriesDescription = SeriesDescription if SeriesDescription else ""
-    dcm.ds.StudyDescription = StudyDescription if StudyDescription else ""
 
 
-def transfer_nii_hdr_instance_tags(dcm, nii2dcm_parameters, instance_index):
+def transfer_nii_hdr_instance_tags(
+    dcm,
+    nii2dcm_parameters,
+    instance_index,
+):
     """
     Transfer NIfTI header parameters applicable to Instance
 
@@ -107,3 +107,25 @@ def transfer_ref_dicom_series_tags(dcm, ref_dcm):
         except AttributeError as e:
             # TODO once logger implemented, replace print statement with log warning
             print(f"Warning: ref_dicom {e} therefore could not transfer")
+
+
+def transfer_custom_dicom_tags(
+    dcm, StudyDescription=None, SeriesDescription=None, ProtocolName=None
+):
+    """
+    Transfer Series level DICOM Attributes from reference DICOM to nii2dcm DICOM
+
+    dcm – nii2dcm DICOM object
+    ref_dcm - reference DICOM object
+    """
+    if StudyDescription:
+        dcm.init_study_tags()
+        dcm.ds.StudyTime = dcm.ds.SeriesTime
+        dcm.ds.StudyDate = dcm.ds.SeriesDate
+    dcm.ds.StudyDescription = (
+        StudyDescription if StudyDescription else dcm.ds.StudyDescription
+    )
+    dcm.ds.SeriesDescription = (
+        SeriesDescription if SeriesDescription else dcm.ds.SeriesDescription
+    )
+    dcm.ds.ProtocolName = ProtocolName if ProtocolName else dcm.ds.ProtocolName

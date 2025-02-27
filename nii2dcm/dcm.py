@@ -27,7 +27,7 @@ from nii2dcm.modules.sop_common import SOPCommon
 from nii2dcm.modules.common_instance_reference import CommonInstanceReference
 from nii2dcm.modules.voi_lut import VOILUT
 
-nii2dcm_temp_filename = 'nii2dcm_tempfile.dcm'
+nii2dcm_temp_filename = "nii2dcm_tempfile.dcm"
 
 
 class Dicom:
@@ -50,14 +50,18 @@ class Dicom:
 
         # Instantiates minimal Pydicom FileMetaDataset object
         self.file_meta = FileMetaDataset()
-        self.file_meta.TransferSyntaxUID = '1.2.840.10008.1.2.1'  # Explicit VR Little Endian
-        self.file_meta.ImplementationVersionName = 'nii2dcm_DICOM'
+        self.file_meta.TransferSyntaxUID = (
+            "1.2.840.10008.1.2.1"  # Explicit VR Little Endian
+        )
+        self.file_meta.ImplementationVersionName = "nii2dcm_DICOM"
 
         # Instantiates minimal DataSet object
-        self.ds = FileDataset(filename, {}, file_meta=self.file_meta, preamble=b"\0" * 128)
+        self.ds = FileDataset(
+            filename, {}, file_meta=self.file_meta, preamble=b"\0" * 128
+        )
         self.ds.is_implicit_VR = False
         self.ds.is_little_endian = True
-        self.ds.ImageType = ['DERIVED', 'SECONDARY']
+        self.ds.ImageType = ["DERIVED", "SECONDARY"]
 
         """
         Initialise Composite IOD by adding Modules to Dicom object
@@ -71,8 +75,8 @@ class Dicom:
         """
         # TODO shift to utils.py and propagate to Modules, or, create method within this Dicom class
         dt = datetime.datetime.now()
-        dateStr = dt.strftime('%Y%m%d')
-        timeStr = dt.strftime('%H%M%S.%f')  # long format with micro seconds
+        dateStr = dt.strftime("%Y%m%d")
+        timeStr = dt.strftime("%H%M%S.%f")  # long format with micro seconds
 
         self.ds.ContentDate = dateStr
         self.ds.ContentTime = timeStr
@@ -95,19 +99,19 @@ class Dicom:
 
         # ImageOrientationPatient
         # hard-coded, probably better way to define based on NIfTI values
-        self.ds.ImageOrientationPatient = ['1', '0', '0', '0', '1', '0']
+        self.ds.ImageOrientationPatient = ["1", "0", "0", "0", "1", "0"]
 
         # Display Attributes
         # NB: RescaleIntercept and RescaleSlope do NOT appear to be in MR Image Module, but are in CT Image, Secondary
         # Capture and Enhanced MR Modules, hence for MRI must define in this class or within DicomMRI class
-        self.ds.RescaleIntercept = ''
-        self.ds.RescaleSlope = ''
-        self.ds.WindowCenter = ''
-        self.ds.WindowWidth = ''
+        self.ds.RescaleIntercept = ""
+        self.ds.RescaleSlope = ""
+        self.ds.WindowCenter = ""
+        self.ds.WindowWidth = ""
 
         # per Instance Attributes
         # initialised with hard-coded value below, but overwritten with transfer_nii_hdr_instance_tags()
-        self.ds.ImagePositionPatient = ['0', '0', '0']
+        self.ds.ImagePositionPatient = ["0", "0", "0"]
 
         self.init_study_tags()
         self.init_series_tags()
@@ -193,8 +197,10 @@ class Dicom:
 
         self.ds.SeriesInstanceUID = pyd.uid.generate_uid(None)
         self.ds.FrameOfReferenceUID = pyd.uid.generate_uid(None)
-        self.ds.SeriesNumber = str(randint(1000, 9999))  # 4 digit number to avoid conflict
-        self.ds.AcquisitionNumber = ''  # Innolitics says this is in General Image Module, but NEMA says it is not...
+        self.ds.SeriesNumber = str(
+            randint(1000, 9999)
+        )  # 4 digit number to avoid conflict
+        self.ds.AcquisitionNumber = ""  # Innolitics says this is in General Image Module, but NEMA says it is not...
 
 
 class DicomMRI(Dicom):
@@ -210,13 +216,13 @@ class DicomMRI(Dicom):
         """
         Set DICOM attributes which are located outside of the MR Image Module to MR-specific values 
         """
-        self.ds.Modality = 'MR'
+        self.ds.Modality = "MR"
 
         # MR Image Storage SOP Class
         # UID = 1.2.840.10008.5.1.4.1.1.4
         # https://dicom.nema.org/dicom/2013/output/chtml/part04/sect_I.4.html
-        self.file_meta.MediaStorageSOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
-        self.ds.SOPClassUID = '1.2.840.10008.5.1.4.1.1.4'
+        self.file_meta.MediaStorageSOPClassUID = "1.2.840.10008.5.1.4.1.1.4"
+        self.ds.SOPClassUID = "1.2.840.10008.5.1.4.1.1.4"
 
         """
         Initialise subclass CIOD Modules
@@ -233,72 +239,68 @@ class DicomMRI(Dicom):
         #  - conflicts if _included_?
 
         self.attributes_to_transfer = [
-            'StudyDate',
-            'SeriesDate',  # TODO omit so SeriesDate = when DICOM created, not acquired? Consistent with SeriesTime
-            'AcquisitionDate',
-            'AccessionNumber',
-            'InstitutionName',
-            'InstitutionAddress',
-            'ReferringPhysicianName',
-            'StationName',
-            'StudyDescription',
-            'ProcedureCodeSequence',  # SQ Sequence
-            'InstitutionalDepartmentName',
-            'PerformingPhysicianName',
-            'OperatorsName',
-            'ManufacturerModelName',
-            'ReferencedStudySequence',  # SQ Sequence
-            'RelatedSeriesSequence',  # SQ Sequence
-
-            'PatientName',
-            'PatientID',
-            'PatientBirthDate',
-            'PatientSex',
-            'PatientAge',
-            'PatientSize',
-            'PatientWeight',
-            'BodyPartExamined',
-
+            "StudyDate",
+            "SeriesDate",  # TODO omit so SeriesDate = when DICOM created, not acquired? Consistent with SeriesTime
+            "AcquisitionDate",
+            "AccessionNumber",
+            "InstitutionName",
+            "InstitutionAddress",
+            "ReferringPhysicianName",
+            "StationName",
+            "StudyDescription",
+            "ProcedureCodeSequence",  # SQ Sequence
+            "InstitutionalDepartmentName",
+            "PerformingPhysicianName",
+            "OperatorsName",
+            "ManufacturerModelName",
+            "ReferencedStudySequence",  # SQ Sequence
+            "RelatedSeriesSequence",  # SQ Sequence
+            "PatientName",
+            "PatientID",
+            "PatientBirthDate",
+            "PatientSex",
+            "PatientAge",
+            "PatientSize",
+            "PatientWeight",
+            "BodyPartExamined",
             # MR Image Module Attributes
-            'ScanningSequence',
-            'SequenceVariant',
-            'ScanOptions',
-            'MRAcquisitionType',
-            'SequenceName',
-            'AngioFlag',
-            'RepetitionTime',
-            'EchoTime',
-            'InversionTime',
-            'NumberOfAverages',
-            'ImagingFrequency',
-            'ImagedNucleus',
-            'MagneticFieldStrength',
-            'NumberOfPhaseEncodingSteps',
-            'EchoTrainLength',
-            'PercentSampling',
-            'PercentPhaseFieldOfView',
-            'PixelBandwidth',
-            'DeviceSerialNumber',
-            'SoftwareVersions',
-            'BeatRejectionFlag',
-            'CardiacNumberOfImages',
-            'ReceiveCoilName',
-            'TransmitCoilName',
-            'InPlanePhaseEncodingDirection',
-            'FlipAngle',
-            'SAR',
-            'PatientPosition',
-
+            "ScanningSequence",
+            "SequenceVariant",
+            "ScanOptions",
+            "MRAcquisitionType",
+            "SequenceName",
+            "AngioFlag",
+            "RepetitionTime",
+            "EchoTime",
+            "InversionTime",
+            "NumberOfAverages",
+            "ImagingFrequency",
+            "ImagedNucleus",
+            "MagneticFieldStrength",
+            "NumberOfPhaseEncodingSteps",
+            "EchoTrainLength",
+            "PercentSampling",
+            "PercentPhaseFieldOfView",
+            "PixelBandwidth",
+            "DeviceSerialNumber",
+            "SoftwareVersions",
+            "BeatRejectionFlag",
+            "CardiacNumberOfImages",
+            "ReceiveCoilName",
+            "TransmitCoilName",
+            "InPlanePhaseEncodingDirection",
+            "FlipAngle",
+            "SAR",
+            "PatientPosition",
             # General Study Module Attributes
-            'StudyInstanceUID',  # Important: enables new DICOM to be filed in original Study
-            'StudyID',
-            'AcquisitionNumber',  # include or set in Dicom subclass?
-            'FrameOfReferenceUID',  # include?
-            'NumberOfTemporalPositions',
-            'ConversionSourceAttributesSequence',  # SQ Sequence
-            'RequestAttributesSequence',  # SQ Sequence
-            'RequestingPhysician',
-            'RequestingService',
+            "StudyInstanceUID",  # Important: enables new DICOM to be filed in original Study
+            "StudyID",
+            "AcquisitionNumber",  # include or set in Dicom subclass?
+            "FrameOfReferenceUID",  # include?
+            "NumberOfTemporalPositions",
+            "ConversionSourceAttributesSequence",  # SQ Sequence
+            "RequestAttributesSequence",  # SQ Sequence
+            "RequestingPhysician",
+            "RequestingService",
+            "SeriesDescription",
         ]
-
-

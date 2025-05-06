@@ -217,9 +217,9 @@ multiple image datasets in the same geometric space. Opens NIfTI and DICOM
 The Software has been developed for research purposes only and is not a clinical tool.
 
 
-<!-- Licence -->
-## Licence 
+<!-- License -->
+## License
 
-[BSD 3-Clause License can be found here](LICENCE)
+[BSD 3-Clause License can be found here](LICENSE)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

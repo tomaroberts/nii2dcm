@@ -72,9 +72,9 @@ def transfer_nii_hdr_instance_tags(dcm, nii2dcm_parameters, instance_index):
     dcm.ds.InstanceNumber = nii2dcm_parameters['InstanceNumber'][instance_index]
     dcm.ds.SliceLocation = nii2dcm_parameters['SliceLocation'][instance_index]
     dcm.ds.ImagePositionPatient = [
-        str(nii2dcm_parameters['ImagePositionPatient'][instance_index][0]),
-        str(nii2dcm_parameters['ImagePositionPatient'][instance_index][1]),
-        str(nii2dcm_parameters['ImagePositionPatient'][instance_index][2]),
+        str(round(nii2dcm_parameters['ImagePositionPatient'][instance_index][0], 10)),
+        str(round(nii2dcm_parameters['ImagePositionPatient'][instance_index][1], 10)),
+        str(round(nii2dcm_parameters['ImagePositionPatient'][instance_index][2], 10)),
     ]
 
 

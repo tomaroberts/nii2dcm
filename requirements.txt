@@ -4,5 +4,5 @@ numpy==1.23.2
 matplotlib==3.6.2
 nibabel==5.0.0
 pydicom==2.3.0
-twine==4.0.2
+twine==6.1.0
 dunamai==1.18.0

@@ -36,8 +36,7 @@ class Nifti:
             dimX, dimY, dimZ = nib_nii.header['pixdim'][1:4].tolist()
 
         else:
-            print("Error: NIfTI is not 3-dimensional.")
-            exit(1)
+            raise ValueError("Error: NIfTI is not 3-dimensional.")
 
         # Instances & Slice Spacing
         nInstances = nZ*nF

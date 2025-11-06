@@ -27,7 +27,7 @@ def write_slice(dcm, img_data, slice_index, output_dir):
     dcm.ds.PixelData = img_slice.tobytes()
 
     # write DICOM file
-    dcm.ds.save_as(os.path.join(output_dir, output_filename), write_like_original=False)
+    dcm.ds.save_as(os.path.join(output_dir, output_filename), enforce_file_format=False)
 
 
 def transfer_nii_hdr_series_tags(dcm, nii2dcm_parameters):

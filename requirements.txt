@@ -1,8 +1,8 @@
 setuptools
 wheel
-numpy==1.23.2
-matplotlib==3.6.2
-nibabel==5.0.0
-pydicom==2.3.0
-twine==6.1.0
-dunamai==1.18.0
+numpy>1.23.2
+matplotlib>=3.6.2
+nibabel>=5.0.0
+pydicom>=2.3.0
+twine>=6.1.0
+dunamai>=1.18.0

@@ -23,7 +23,7 @@ def write_slice(dcm, img_data, slice_index, output_dir):
     # Instance UID – unique to current slice
     dcm.ds.SOPInstanceUID = pyd.uid.generate_uid(None)
 
-    # write pixel data
+    # write pixel data - always use standard PixelData for compatibility
     dcm.ds.PixelData = img_slice.tobytes()
 
     # write DICOM file

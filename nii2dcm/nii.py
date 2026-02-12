@@ -66,7 +66,9 @@ class Nifti:
 
         image_pos_patient_array = []
         for iInstance in range(0, nInstances):
-            T1N = fnT1N(A, iInstance)
+            # Map instance index to actual slice index (1-based)
+            slice_idx = sliceIndices[iInstance]
+            T1N = fnT1N(A, slice_idx)
             image_pos_patient_array.append([T1N[0], T1N[1], T1N[2]])
 
         # output dictionary
@@ -92,8 +94,6 @@ class Nifti:
             'RescaleSlope': str(rescaleSlope),
             'SpacingBetweenSlices': round(float(dimZ), 2),
             'ImageOrientationPatient': [dircosY[0], dircosY[1], dircosY[2], dircosX[0], dircosX[1], dircosX[2]],
-            # alternative:
-            # 'ImageOrientationPatient': [dircosX[0], dircosX[1], dircosX[2], dircosY[0], dircosY[1], dircosY[2]],
 
             # instance parameters
             'InstanceNumber': sliceIndices,

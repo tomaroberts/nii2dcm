@@ -37,6 +37,15 @@ def run_nii2dcm(input_nii_path, output_dcm_path, dicom_type=None, ref_dicom_file
     # get NIfTI parameters
     nii2dcm_parameters = nii2dcm.nii.Nifti.get_nii2dcm_parameters(nii)
 
+    # load reference DICOM object
+    # --ref_dicom_file specified on command line
+    if ref_dicom_file is not None:
+        ref_dicom = pyd.dcmread(ref_dicom_file)
+
+        # if --dicom_type is unspecified, infer value from --ref_dicom
+        if dicom_type is None:
+            dicom_type = ref_dicom.Modality
+
     # initialise nii2dcm.dcm object
     # --dicom_type specified on command line
     if dicom_type is None:
@@ -51,10 +60,6 @@ def run_nii2dcm(input_nii_path, output_dcm_path, dicom_type=None, ref_dicom_file
         nii_img[nii_img < 0] = 0  # set background pixels = 0 (negative in SVRTK)
         nii_img = nii_img.astype("uint16")
 
-    # load reference DICOM object
-    # --ref_dicom_file specified on command line
-    if ref_dicom_file is not None:
-        ref_dicom = pyd.dcmread(ref_dicom_file)
 
     # transfer Series tags from NIfTI
     transfer_nii_hdr_series_tags(dicom, nii2dcm_parameters)
